@@ -1,0 +1,12 @@
+version: "3"
+
+services:
+  db:
+    image: mysql
+    restart: always
+    expose:
+      - "3306"
+    env_file:
+      - .env
+    volumes:
+      - ./docker/db/my.cnf:/etc/mysql/conf.d/my.cnf
