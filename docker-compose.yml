@@ -2,11 +2,21 @@ version: "3"
 
 services:
   db:
-    image: mysql
+    image: mysql:8.0
     restart: always
     expose:
       - "3306"
     env_file:
       - .env
     volumes:
-      - ./docker/db/my.cnf:/etc/mysql/conf.d/my.cnf
+      - ./docker/db/conf.d:/etc/mysql/conf.d:cached
+
+  app:
+    build:./docker/app
+  restart: always
+  ports:
+    - "8080":"8080"
+  env_file:
+    - .env
+  depends_on:
+    - db
