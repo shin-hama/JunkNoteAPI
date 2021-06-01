@@ -20,3 +20,6 @@ COPY --from=builder /usr/src/app/requirements.txt .
 RUN pip install -r requirements.txt
 
 COPY . .
+
+CMD alembic upgrade head && \
+    uvicorn --host=0.0.0.0 app.main:app
