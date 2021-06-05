@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import List
+from typing import List, Optional
 
 from pydantic import BaseModel
 
@@ -7,10 +7,7 @@ from pydantic import BaseModel
 class MemoBase(BaseModel):
     containts: str
     datetime: datetime
-    reference = str
-
-    class Config:
-        orm_mode = True
+    reference: Optional[str] = None
 
 
 class MemoCreate(MemoBase):
@@ -18,8 +15,12 @@ class MemoCreate(MemoBase):
 
 
 class Memo(MemoBase):
+    id: int
     owner_id: int
     is_removed: bool
+
+    class Config:
+        orm_mode = True
 
 
 class UserBase(BaseModel):
@@ -33,7 +34,7 @@ class UserCreate(UserBase):
 
 class User(UserBase):
     id: int
-    memos: List[Memo]
+    memos: List[Memo] = []
 
     class Config:
         orm_mode = True
