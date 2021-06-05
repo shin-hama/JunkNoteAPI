@@ -20,12 +20,12 @@ def get_db():
         db.close()
 
 
-@router.post("/")
+@router.post("/", response_model=schemas.User)
 def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
     return users.create_user(db=db, user=user)
 
 
-@router.post("/{user_id}/memos")
+@router.post("/{user_id}/memos", response_model=schemas.Memo)
 def create_memo_for_user(
     user_id: int, memo: schemas.MemoCreate, db: Session = Depends(get_db)
 ):

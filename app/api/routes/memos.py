@@ -25,14 +25,12 @@ def get_db():
 @router.get("/", response_model=List[schemas.Memo])
 def read_memos(
     skip: int = 0, limit: int = 100, db: Session = Depends(get_db)
-):
+) -> list[schemas.Memo]:
     return memos.get_memos(db=db, skip=skip, limit=limit)
 
 
 @router.get("/{memo_id}", response_model=schemas.Memo)
 def read_memo(
     memo_id: int, db: Session = Depends(get_db)
-):
-    test = memos.get_memo(db=db, memo_id=memo_id)
-    print("\n".join([f"{k}: {v}" for k, v in vars(test).items()]))
-    return test
+) -> schemas.Memo:
+    return memos.get_memo(db=db, memo_id=memo_id)
