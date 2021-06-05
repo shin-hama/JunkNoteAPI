@@ -2,6 +2,9 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 
+from app.api.routes.api import router as api_router
+
+API_ROOT = "/api"
 
 app = FastAPI()
 
@@ -14,7 +17,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-API_ROOT = "/api"
+app.include_router(api_router, prefix=API_ROOT)
 
 
 @app.get("/")

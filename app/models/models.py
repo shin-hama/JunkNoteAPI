@@ -12,7 +12,7 @@ class User(Base):
     password = Column(String(32))
     name = Column(String(32))
 
-    memos = relationship("memo", back_populates="owner")
+    memos = relationship("Memo", back_populates="owner")
 
 
 class Memo(Base):
@@ -25,4 +25,4 @@ class Memo(Base):
     owner_id = Column(Integer, ForeignKey("users.id"))
     is_removed = Column(Boolean, default=False, index=True)
 
-    owner = relationship("user", back_populates="memos")
+    owner = relationship("User", back_populates="memos")
