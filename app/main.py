@@ -1,33 +1,27 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-import uvicorn
 
 from app.api.routes.api import router as api_router
+from app.core.config import DEBUG, PROJECT_NAME, VERSION
 
 API_ROOT = "/api"
 
-app = FastAPI()
 
-# CORS setting
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+def get_application():
+    app = FastAPI(title=PROJECT_NAME, debug=DEBUG, version=VERSION)
 
-app.include_router(api_router, prefix=API_ROOT)
+    # CORS setting
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=["*"],
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
 
+    app.include_router(api_router, prefix=API_ROOT)
 
-@app.get("/")
-async def index() -> dict:
-    return {"test": "test"}
-
-
-def main():
-    uvicorn.run("app.main:app", port=8031, reload=True)
+    return app
 
 
-if __name__ == "__main__":
-    main()
+app = get_application()
