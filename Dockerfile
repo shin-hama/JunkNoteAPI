@@ -22,4 +22,4 @@ RUN pip install -r requirements.txt
 COPY . .
 
 CMD alembic upgrade head && \
-    uvicorn --host=0.0.0.0 app.main:app
+    uvicorn --host=0.0.0.0 app.main:app --reload

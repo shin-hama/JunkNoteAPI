@@ -7,7 +7,7 @@ from app.core.config import DEBUG, PROJECT_NAME, VERSION
 API_ROOT = "/api"
 
 
-def get_application():
+def get_application() -> FastAPI:
     app = FastAPI(title=PROJECT_NAME, debug=DEBUG, version=VERSION)
 
     # CORS setting

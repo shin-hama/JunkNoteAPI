@@ -1,4 +1,4 @@
-from typing import List
+from typing import Iterator, List
 
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
@@ -14,7 +14,7 @@ router = APIRouter()
 
 
 # Dependency
-def get_db():
+def get_db() -> Iterator[SessionLocal]:
     db = SessionLocal()
     try:
         yield db
@@ -25,12 +25,12 @@ def get_db():
 @router.get("/", response_model=List[schemas.Memo])
 def read_memos(
     skip: int = 0, limit: int = 100, db: Session = Depends(get_db)
-):
+) -> list[schemas.Memo]:
     return memos.get_memos(db=db, skip=skip, limit=limit)
 
 
 @router.get("/{memo_id}", response_model=schemas.Memo)
 def read_memo(
     memo_id: int, db: Session = Depends(get_db)
-):
+) -> schemas.Memo:
     return memos.get_memo(db=db, memo_id=memo_id)
