@@ -1,9 +1,10 @@
-from typing import Iterator, List
+from typing import List
 
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
-from app.db.db import SessionLocal, engine
+from app.api.dependencies.database import get_db
+from app.db.db import engine
 from app.db import memos
 from app.models import models, schemas
 
@@ -11,15 +12,6 @@ from app.models import models, schemas
 models.Base.metadata.create_all(bind=engine)
 
 router = APIRouter()
-
-
-# Dependency
-def get_db() -> Iterator[SessionLocal]:
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
 
 
 @router.get("/", response_model=List[schemas.Memo])

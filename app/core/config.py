@@ -19,6 +19,14 @@ MYSQL_PASSWORD: str = config("MYSQL_PASSWORD")
 MYSQL_PORT: str = config("MYSQL_PORT")
 MYSQL_USER: str = config("MYSQL_USER")
 
+DATABASE_URL = config(
+    "DATABASE_URL",
+    default=(
+        f"mysql+pymysql://{MYSQL_USER}:{MYSQL_PASSWORD}"
+        f"@{MYSQL_HOST}:{MYSQL_PORT}/{MYSQL_DATABASE}"
+    )
+)
+
 PROJECT_NAME: str = config("PROJECT_NAME", default="Junk Note API")
 
 LOGGING_LEVEL = logging.DEBUG if DEBUG else logging.INFO
