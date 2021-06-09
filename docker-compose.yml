@@ -16,7 +16,7 @@ services:
 
   app:
     build:
-      context: ./docker/app
+      context: .
       dockerfile: Dockerfile
     restart: on-failure
     container_name: "fastapi"
