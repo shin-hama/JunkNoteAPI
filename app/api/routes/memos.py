@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 
 from app.api.dependencies.database import get_db
 from app.db.db import engine
-from app.db import memos
+from app.db.queries import memos
 from app.models import models, schemas
 
 
