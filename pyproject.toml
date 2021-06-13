@@ -23,6 +23,9 @@ autopep8 = "^1.5.7"
 flake8 = "^3.9.2"
 mypy = "^0.812"
 pytest = "^6.2.4"
+asgi-lifespan = "^1.0.1"
+httpx = "^0.18.1"
+docker = "^5.0.0"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
