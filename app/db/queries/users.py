@@ -1,10 +1,13 @@
+from datetime import datetime
+
 from sqlalchemy.orm import Session
 
 from app.models import models, schemas
 
 
 def create_user(db: Session, user: schemas.UserCreate) -> models.User:
-    db_user = models.User(**user.dict())
+    now = datetime.now()
+    db_user = models.User(**user.dict(), created_at=now)
     db.add(db_user)
     db.commit()
     db.refresh(db_user)
