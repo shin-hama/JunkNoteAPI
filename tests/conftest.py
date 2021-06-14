@@ -47,5 +47,5 @@ def app() -> FastAPI:
 
 
 @pytest.fixture
-async def client(app: FastAPI) -> TestClient:
+def client(app: FastAPI) -> TestClient:
     return TestClient(app)
