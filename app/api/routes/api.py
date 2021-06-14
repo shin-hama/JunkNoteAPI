@@ -2,6 +2,11 @@ from fastapi import APIRouter, Depends
 from fastapi.security import OAuth2PasswordBearer
 
 from app.api.routes import memos, users
+from app.db.db import engine
+from app.models import models
+
+
+models.Base.metadata.create_all(bind=engine)
 
 router = APIRouter()
 router.include_router(memos.router, tags=["memos"], prefix="/memos")

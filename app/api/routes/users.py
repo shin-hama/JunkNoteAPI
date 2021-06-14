@@ -2,12 +2,9 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
 from app.api.dependencies.database import get_db
-from app.db.db import engine
 from app.db.queries import users
-from app.models import models, schemas
+from app.models import schemas
 
-
-models.Base.metadata.create_all(bind=engine)
 
 router = APIRouter()
 

@@ -16,7 +16,7 @@ DEBUG: bool = config("DEBUG", cast=bool, default=False)
 MYSQL_DATABASE: str = config("MYSQL_DATABASE")
 MYSQL_HOST: str = config("MYSQL_HOST")
 MYSQL_PASSWORD: str = config("MYSQL_PASSWORD")
-MYSQL_PORT: str = config("MYSQL_PORT")
+MYSQL_PORT: str = config("MYSQL_PORT", cast=int)
 MYSQL_USER: str = config("MYSQL_USER")
 
 DATABASE_URL = config(
