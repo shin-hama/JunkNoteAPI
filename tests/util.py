@@ -17,6 +17,12 @@ os.environ["DATABASE_URL"] = TEST_DB_URL
 
 
 def is_database_ready() -> bool:
+    """ Return True when success to connect mysql database.
+
+    Return
+    ------
+    is_connected : bool
+    """
     try:
         pymysql.connect(
             host=TEST_MYSQL_HOST,
