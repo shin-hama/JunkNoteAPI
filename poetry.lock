@@ -789,6 +789,14 @@ optional = false
 python-versions = ">=2.6, !=3.0.*, !=3.1.*, !=3.2.*"
 
 [[package]]
+name = "types-pymysql"
+version = "0.1.5"
+description = "Typing stubs for PyMySQL"
+category = "dev"
+optional = false
+python-versions = "*"
+
+[[package]]
 name = "typing-extensions"
 version = "3.10.0.0"
 description = "Backported and Experimental Type Hints for Python 3.5+"
@@ -879,7 +887,7 @@ python-versions = ">=3.6.1"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "5a3ec4eec0c10e8889eeddbf067775c7cf1a14088859d4192bd78cd242b729c3"
+content-hash = "78162c5fea16e6c8cd299f1259ca7c6ea4cd1172b8feb3af0f2a386afe770aaa"
 
 [metadata.files]
 aiofiles = [
@@ -1425,6 +1433,9 @@ starlette = [
 toml = [
     {file = "toml-0.10.2-py2.py3-none-any.whl", hash = "sha256:806143ae5bfb6a3c6e736a764057db0e6a0e05e338b5630894a5f779cabb4f9b"},
     {file = "toml-0.10.2.tar.gz", hash = "sha256:b3bda1d108d5dd99f4a20d24d9c348e91c4db7ab1b749200bded2f839ccbe68f"},
+]
+types-pymysql = [
+    {file = "types_PyMySQL-0.1.5-py2.py3-none-any.whl", hash = "sha256:5c78ec3d754422647af97971b9b3b5085a0dfc646a092c56c4fd1ba5a229e2ef"},
 ]
 typing-extensions = [
     {file = "typing_extensions-3.10.0.0-py2-none-any.whl", hash = "sha256:0ac0f89795dd19de6b97debb0c6af1c70987fd80a2d62d1958f7e56fcc31b497"},
