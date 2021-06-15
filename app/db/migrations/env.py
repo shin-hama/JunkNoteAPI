@@ -33,7 +33,7 @@ def run_migrations_offline() -> None:
     This configures the context with just a URL
     and not an Engine, though an Engine is acceptable
     here as well.  By skipping the Engine creation
-    we don't even need a DBAPI to be available.
+    we don't even need a DB API to be available.
 
     Calls to context.execute() here emit the given string to the
     script output.
@@ -58,8 +58,17 @@ def run_migrations_online() -> None:
     and associate a connection with the context.
 
     """
+    # get the alembic section of the config file
+    ini_section = config.get_section(config.config_ini_section)
+
+    # if a database path was provided, override the one in alembic.ini
+    # ex: `alembic -x dbPath=path/to/database`
+    db_path = context.get_x_argument(as_dictionary=True).get('dbPath')
+    if db_path:
+        ini_section['sqlalchemy.url'] = db_path
+
     connectable = engine_from_config(
-        config.get_section(config.config_ini_section),
+        ini_section,
         prefix="sqlalchemy.",
         poolclass=pool.NullPool,
     )
