@@ -12,6 +12,15 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    environment:
+      name: PR_workflow
+    env:
+      MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
+      MYSQL_HOST: ${{ secrets.MYSQL_HOST }}
+      MYSQL_DATABASE: ${{ secrets.MYSQL_DATABASE }}
+      MYSQL_USER: ${{ secrets.MYSQL_USER }}
+      MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
+      MYSQL_PORT: ${{ secrets.MYSQL_PORT }}
 
     steps:
       - uses: actions/checkout@v2
@@ -23,11 +32,20 @@ jobs:
         run: |
           curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python -
           source $HOME/.poetry/env
-          poetry export -f requirements.txt > requirements.txt
+          poetry export --dev -f requirements.txt > requirements.txt
+      - name: Cache pip
+        uses: actions/cache@v2
+        with:
+          # このパスは Ubuntu に固有です
+          path: ~/.cache/pip
+          # 対応する要件ファイルにキャッシュヒットがあるかどうかを確認する
+          key: ${{ runner.os }}-pip-${{ hashFiles('requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+            ${{ runner.os }}-
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install flake8 pytest mypy
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
       - name: Lint with flake8
         run: |
@@ -40,4 +58,4 @@ jobs:
           mypy .
       - name: Test with pytest
         run: |
-          pytest
+          pytest .

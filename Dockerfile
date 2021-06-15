@@ -1,4 +1,4 @@
-FROM python:3.8-slim as builder
+FROM python:3.9-slim as builder
 
 WORKDIR /usr/src/app
 
@@ -6,10 +6,10 @@ RUN pip install poetry
 
 COPY pyproject.toml poetry.lock ./
 
-RUN poetry export -f requirements.txt > requirements.txt
+RUN poetry export --dev -f requirements.txt > requirements.txt
 
 
-FROM python:3.8-slim
+FROM python:3.9-slim
 
 ENV PYTHONUNBUFFERED=1
 
@@ -22,4 +22,4 @@ RUN pip install -r requirements.txt
 COPY . .
 
 CMD alembic upgrade head && \
-    uvicorn --host=0.0.0.0 app.main:app
+    uvicorn --host=0.0.0.0 app.main:app --reload

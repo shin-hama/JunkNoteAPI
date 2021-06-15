@@ -26,6 +26,7 @@ class Memo(MemoBase):
 class UserBase(BaseModel):
     user_id: str
     name: str
+    email: str
 
 
 class UserCreate(UserBase):
@@ -35,6 +36,7 @@ class UserCreate(UserBase):
 class User(UserBase):
     id: int
     memos: List[Memo] = []
+    created_at: datetime
 
     class Config:
         orm_mode = True
