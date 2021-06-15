@@ -21,11 +21,12 @@ SQLAlchemy = "^1.4.17"
 [tool.poetry.dev-dependencies]
 autopep8 = "^1.5.7"
 flake8 = "^3.9.2"
-mypy = "^0.812"
+mypy = "^0.902"
 pytest = "^6.2.4"
 asgi-lifespan = "^1.0.1"
 httpx = "^0.18.1"
 docker = "^5.0.0"
+types-PyMySQL = "^0.1.5"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
