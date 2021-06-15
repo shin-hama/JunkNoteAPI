@@ -12,11 +12,11 @@ config = Config(".env")
 
 DEBUG: bool = config("DEBUG", cast=bool, default=False)
 
-MYSQL_DATABASE: str = config("MYSQL_DATABASE")
-MYSQL_HOST: str = config("MYSQL_HOST")
-MYSQL_PASSWORD: str = config("MYSQL_PASSWORD")
-MYSQL_PORT: str = config("MYSQL_PORT", cast=int)
-MYSQL_USER: str = config("MYSQL_USER")
+MYSQL_DATABASE: str = config("MYSQL_DATABASE", default="db")
+MYSQL_HOST: str = config("MYSQL_HOST", default="localhost")
+MYSQL_PASSWORD: str = config("MYSQL_PASSWORD", default="")
+MYSQL_PORT: str = config("MYSQL_PORT", cast=int, default="3306")
+MYSQL_USER: str = config("MYSQL_USER", default="")
 
 DATABASE_URL = config(
     "DATABASE_URL",
