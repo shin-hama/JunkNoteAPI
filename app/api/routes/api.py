@@ -7,11 +7,11 @@ from pydantic import BaseModel
 from app.api.routes import memos, users
 
 
-router = APIRouter()
+router = APIRouter(prefix="/api")
 router.include_router(memos.router, tags=["memos"], prefix="/memos")
 router.include_router(users.router, tags=["users"], prefix="/users")
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="api/token")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl=f"{router.prefix}/token")
 
 
 fake_users_db = {
@@ -36,7 +36,7 @@ class FakeUser(BaseModel):
     username: str
     email: Optional[str] = None
     full_name: Optional[str] = None
-    disabled: Optional[str] = None
+    disabled: Optional[bool] = None
 
 
 class UserInDB(FakeUser):

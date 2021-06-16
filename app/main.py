@@ -19,7 +19,7 @@ def get_application() -> FastAPI:
         allow_headers=["*"],
     )
 
-    app.include_router(api_router, prefix=API_ROOT)
+    app.include_router(api_router)
 
     return app
 
