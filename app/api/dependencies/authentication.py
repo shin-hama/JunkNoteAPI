@@ -4,7 +4,7 @@ from typing import Optional
 from fastapi.security import OAuth2PasswordBearer
 from jose import jwt
 
-from app.core.config import ACCESS_TOKEN_EXPIRE_MINUTES, ALGORITHM, SECRET_KEY
+from app.core.config import TOKEN_EXPIRE, ALGORITHM, SECRET_KEY
 from app.models.schemas.users import UserInDB
 
 
@@ -20,7 +20,7 @@ def get_user(
 
 
 def create_access_token(data: dict[str, object]) -> str:
-    expires_delta = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+    expires_delta = timedelta(minutes=TOKEN_EXPIRE)
 
     to_encode = data.copy()
     expire = datetime.utcnow() + expires_delta
