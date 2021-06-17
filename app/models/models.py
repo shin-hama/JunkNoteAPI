@@ -9,9 +9,8 @@ class User(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     email = Column(String(128), index=True)
-    user_id = Column(String(32), index=True)
-    password = Column(String(32))
-    name = Column(String(32))
+    hashed_password = Column(String(32))
+    username = Column(String(32))
     created_at = Column(DateTime, index=True)
 
     memos = relationship("Memo", back_populates="owner")
