@@ -9,7 +9,7 @@ from app.api.dependencies.authentication import (
 from app.core.config import ALGORITHM, SECRET_KEY
 from app.db.queries import users as users_db
 from app.models.schemas.memos import Memo, MemoCreate
-from app.models.schemas.users import UserInCreate, UserInDB, UserWithToken
+from app.models.schemas.users import UserInDB, UserInResponse, UserWithToken
 
 router = APIRouter()
 
@@ -21,13 +21,6 @@ fake_users_db = {
         "disabled": False,
     }
 }
-
-
-# @router.post("/", response_model=UserWithToken)
-# def create_user(
-#     user: UserInCreate, db: Session = Depends(get_db)
-# ) -> UserWithToken:
-#     return users_db.create_user(db=db, user=user)
 
 
 @router.post("/{user_id}/memos", response_model=Memo)
@@ -66,11 +59,11 @@ async def get_current_active_user(
     return current_user
 
 
-@router.get("/me", response_model=UserWithToken)
+@router.get("/me", response_model=UserInResponse)
 async def read_users_me(
     user: UserInDB = Depends(get_current_active_user)
 ) -> UserInDB:
     # Set response model to hide hashed_password
-    access_token = create_access_token(data={"sub": user.username})
+    token = create_access_token(data={"sub": user.username})
 
-    return UserWithToken(**user.dict(), token=access_token)
+    return UserInResponse(user=UserWithToken(**user.dict(), token=token))
