@@ -11,6 +11,7 @@ from app.db.queries import users as users_db
 from app.models.schemas.memos import Memo, MemoCreate
 from app.models.schemas.users import UserInDB, UserInResponse, UserWithToken
 
+
 router = APIRouter()
 
 fake_users_db = {
@@ -62,7 +63,7 @@ async def get_current_active_user(
 @router.get("/me", response_model=UserInResponse)
 async def read_users_me(
     user: UserInDB = Depends(get_current_active_user)
-) -> UserInDB:
+) -> UserInResponse:
     # Set response model to hide hashed_password
     token = create_access_token(data={"sub": user.username})
 

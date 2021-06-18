@@ -3,6 +3,7 @@ from datetime import datetime
 from sqlalchemy.orm import Session
 
 from app.models.schemas.users import UserInCreate
+from app.models.schemas.memos import MemoCreate
 from app.models import models
 
 
@@ -16,7 +17,7 @@ def create_user(db: Session, user: UserInCreate) -> models.User:
 
 
 def create_memo_for_user(
-    db: Session, memo: UserInCreate, user_id: int
+    db: Session, memo: MemoCreate, user_id: int
 ) -> models.Memo:
     db_memo = models.Memo(**memo.dict(), owner_id=user_id)
     db.add(db_memo)
