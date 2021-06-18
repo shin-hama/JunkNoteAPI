@@ -23,11 +23,11 @@ fake_users_db = {
 }
 
 
-@router.post("/", response_model=UserWithToken)
-def create_user(
-    user: UserInCreate, db: Session = Depends(get_db)
-) -> UserWithToken:
-    return users_db.create_user(db=db, user=user)
+# @router.post("/", response_model=UserWithToken)
+# def create_user(
+#     user: UserInCreate, db: Session = Depends(get_db)
+# ) -> UserWithToken:
+#     return users_db.create_user(db=db, user=user)
 
 
 @router.post("/{user_id}/memos", response_model=Memo)

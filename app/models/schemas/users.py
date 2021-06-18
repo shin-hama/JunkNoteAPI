@@ -24,7 +24,7 @@ class UserInUpdate(BaseModel):
 class BaseUser(BaseSchema):
     username: str
     email: str
-    disabled: bool
+    disabled: bool = False
 
 
 class UserWithToken(BaseUser):
