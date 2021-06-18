@@ -12,6 +12,7 @@ class User(Base):
     hashed_password = sa.Column(sa.String(60))
     username = sa.Column(sa.Text)
     created_at = sa.Column(sa.DateTime, index=True)
+    disabled = sa.Column(sa.Boolean, default=False, index=True)
 
     memos = relationship("Memo", back_populates="owner")
 

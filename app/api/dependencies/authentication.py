@@ -21,7 +21,7 @@ def get_user_by_username(
         return UserInDB(
             username=db_user.username,
             email=db_user.email,
-            disabled=False,
+            disabled=db_user.disabled,
             hashed_password=db_user.hashed_password
         )
 

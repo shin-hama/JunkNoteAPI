@@ -8,20 +8,12 @@ from app.api.dependencies.authentication import (
     create_access_token, get_user_by_username
 )
 from app.api.dependencies.database import get_db
+from app.db.queries.users import create_user
 from app.models.schemas.users import UserInCreate, UserInDB, UserInResponse
+from app.services.authentication import check_email_is_taken
 from app.services.security import get_password_hash, verify_password
 
-
 router = APIRouter()
-
-fake = {
-    "johndoe": {
-        "username": "johndoe",
-        "email": "johndoe@example.com",
-        "hashed_password": "$2b$12$EixZaYVK1fsbw1ZfbX3OXePaWxn96p36WQoeG6Lruj3vjPGga31lW",
-        "disabled": False,
-    }
-}
 
 
 def authenticate_user(
@@ -52,15 +44,10 @@ async def login(
     access_token = create_access_token(data={"sub": user.username})
 
     return UserInResponse(
-        user={
-            **user.dict(),
-            "access_token": access_token
-        }
+        **user.dict(),
+        access_token=access_token,
+        token_type="bearer"
     )
-
-
-def exists_email(db: Session, email: str) -> bool:
-    return any([email == user["email"] for user in db.values()])
 
 
 @router.post(
@@ -72,10 +59,10 @@ async def register(
     user_create: UserInCreate = Body(..., embed=True, alias="user"),
     db: Session = Depends(get_db)
 ) -> UserInResponse:
-    if exists_email(db, user_create.email):
+    if check_email_is_taken(db, user_create.email):
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail="E mail already exists"
+            detail="E-mail already exists"
         )
 
     hashed_password = get_password_hash(user_create.password)
@@ -83,10 +70,10 @@ async def register(
     access_token = create_access_token(data={"sub": user_create.username})
 
     user_db = UserInDB(**user_create.dict(), hashed_password=hashed_password)
+    create_user(db, user_db)
 
-    return UserInResponse(**{
-        "user": {
-            **user_db.dict(),
-            "token": access_token
-        }
-    })
+    return UserInResponse(
+        **user_db.dict(),
+        access_token=access_token,
+        token_type="bearer"
+    )

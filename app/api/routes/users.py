@@ -9,19 +9,10 @@ from app.api.dependencies.authentication import (
 from app.core.config import ALGORITHM, SECRET_KEY
 from app.db.queries import users as users_db
 from app.models.schemas.memos import Memo, MemoCreate
-from app.models.schemas.users import UserInDB, UserInResponse, UserWithToken
+from app.models.schemas.users import UserInDB, UserInResponse
 
 
 router = APIRouter()
-
-fake_users_db = {
-    "johndoe": {
-        "username": "johndoe",
-        "email": "johndoe@example.com",
-        "hashed_password": "$2b$12$EixZaYVK1fsbw1ZfbX3OXePaWxn96p36WQoeG6Lruj3vjPGga31lW",
-        "disabled": False,
-    }
-}
 
 
 @router.post("/{user_id}/memos", response_model=Memo)
@@ -31,7 +22,10 @@ def create_memo_for_user(
     return users_db.create_memo_for_user(db=db, memo=memo, user_id=user_id)
 
 
-async def get_current_user(token: str = Depends(oauth2_scheme)) -> UserInDB:
+async def get_current_user(
+    token: str = Depends(oauth2_scheme),
+    db: Session = Depends(get_db)
+) -> UserInDB:
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Couldn't invalid credentials",
@@ -45,7 +39,7 @@ async def get_current_user(token: str = Depends(oauth2_scheme)) -> UserInDB:
     except JWTError:
         raise credentials_exception
 
-    user = get_user_by_username(fake_users_db, username=username)
+    user = get_user_by_username(db, username=username)
     if user is None:
         raise credentials_exception
 
@@ -67,4 +61,8 @@ async def read_users_me(
     # Set response model to hide hashed_password
     token = create_access_token(data={"sub": user.username})
 
-    return UserInResponse(user=UserWithToken(**user.dict(), token=token))
+    return UserInResponse(
+        **user.dict(),
+        access_token=token,
+        token_type="bearer"
+    )

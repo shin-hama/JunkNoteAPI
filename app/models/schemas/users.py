@@ -1,5 +1,4 @@
-from datetime import datetime
-from typing import List, Optional
+from typing import Optional
 
 from pydantic import BaseModel, EmailStr
 
@@ -27,12 +26,9 @@ class BaseUser(BaseSchema):
     disabled: bool = False
 
 
-class UserWithToken(BaseUser):
-    token: str
-
-
-class UserInResponse(BaseSchema):
-    user: UserWithToken
+class UserInResponse(BaseUser):
+    access_token: str
+    token_type: str
 
 
 class UserInDB(BaseUser):
