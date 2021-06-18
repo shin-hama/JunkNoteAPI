@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 
 from app.api.dependencies.database import get_db
 from app.api.dependencies.authentication import (
-    create_access_token, get_user, oauth2_scheme
+    create_access_token, get_user_by_username, oauth2_scheme
 )
 from app.core.config import ALGORITHM, SECRET_KEY
 from app.db.queries import users as users_db
@@ -45,7 +45,7 @@ async def get_current_user(token: str = Depends(oauth2_scheme)) -> UserInDB:
     except JWTError:
         raise credentials_exception
 
-    user = get_user(fake_users_db, username=username)
+    user = get_user_by_username(fake_users_db, username=username)
     if user is None:
         raise credentials_exception
 

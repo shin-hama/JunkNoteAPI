@@ -24,3 +24,17 @@ def create_memo_for_user(
     db.commit()
     db.refresh(db_memo)
     return db_memo
+
+
+def get_user_by_username(db: Session, username: str) -> models.User:
+    db_user = db.query(models.User).filter(
+        models.User.username == username
+    ).first()
+    return db_user
+
+
+def get_user_by_email(db: Session, email: str) -> models.User:
+    db_user = db.query(models.User).filter(
+        models.User.email == email
+    ).first()
+    return db_user

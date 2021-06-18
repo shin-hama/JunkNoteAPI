@@ -22,4 +22,6 @@ def read_memos(
 def read_memo(
     memo_id: int, db: Session = Depends(get_db)
 ) -> Memo:
-    return memos.get_memo(db=db, memo_id=memo_id)
+    test = memos.get_memo(db=db, memo_id=memo_id)
+    print(test)
+    return test

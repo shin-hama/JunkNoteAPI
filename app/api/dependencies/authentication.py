@@ -3,19 +3,28 @@ from typing import Optional
 
 from fastapi.security import OAuth2PasswordBearer
 from jose import jwt
+from sqlalchemy.orm import Session
 
 from app.core.config import TOKEN_EXPIRE, ALGORITHM, SECRET_KEY
+from app.db.queries import users
 from app.models.schemas.users import UserInDB
 
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="api/users/login")
 
 
-def get_user(
-    db: dict[str, dict[str, object]], username: str
+def get_user_by_username(
+    db: Session, username: str
 ) -> Optional[UserInDB]:
-    if username in db:
-        return UserInDB(**db[username])
+    db_user = users.get_user_by_username(db, username)
+    if db_user:
+        return UserInDB(
+            username=db_user.username,
+            email=db_user.email,
+            disabled=False,
+            hashed_password=db_user.hashed_password
+        )
+
     return None
 
 
