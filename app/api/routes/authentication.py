@@ -11,7 +11,7 @@ from app.api.dependencies.database import get_db
 from app.db.queries.users import create_user
 from app.models.schemas.users import UserInCreate, UserInDB, UserInResponse
 from app.services.authentication import check_email_is_taken
-from app.services.security import get_password_hash, verify_password
+from app.services.security import get_password_hash
 
 router = APIRouter()
 
@@ -22,7 +22,7 @@ def authenticate_user(
     user = get_user_by_username(db, username)
     if not user:
         return None
-    if not verify_password(password, user.hashed_password):
+    if not user.verify_password(password):
         return None
     return user
 

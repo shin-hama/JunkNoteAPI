@@ -8,11 +8,12 @@ class User(Base):
     __tablename__ = "users"
 
     id = sa.Column(sa.Integer, primary_key=True, index=True)
-    email = sa.Column(sa.Text, index=True)
-    hashed_password = sa.Column(sa.String(60))
-    username = sa.Column(sa.Text)
+    username = sa.Column(sa.Text, nullable=False)
+    email = sa.Column(sa.Text, index=True, nullable=False)
+    salt = sa.Column(sa.Text, nullable=False)
+    hashed_password = sa.Column(sa.String(60), nullable=False)
     created_at = sa.Column(sa.DateTime, index=True)
-    disabled = sa.Column(sa.Boolean, default=False, index=True)
+    disabled = sa.Column(sa.Boolean, default=False, index=True, nullable=False)
 
     memos = relationship("Memo", back_populates="owner")
 
