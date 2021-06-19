@@ -17,6 +17,27 @@ def create_user(db: Session, user: UserInDB) -> models.User:
     return db_user
 
 
+def update_user(
+    db: Session,
+    user: UserInDB,
+    username: Optional[str] = None,
+    email: Optional[str] = None,
+    password: Optional[str] = None,
+) -> UserInDB:
+    org_email = user.email
+    user.username = username or user.username
+    user.email = email or user.email
+    if password:
+        user.change_password(password)
+
+    db.query(models.User).filter(
+        models.User.email == org_email
+    ).update(user.dict())
+    db.commit()
+
+    return user
+
+
 def create_memo_for_user(
     db: Session, memo: MemoCreate, user_id: int
 ) -> models.Memo:

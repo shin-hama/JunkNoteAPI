@@ -11,7 +11,6 @@ from app.api.dependencies.database import get_db
 from app.db.queries.users import create_user
 from app.models.schemas.users import UserInCreate, UserInDB, UserInResponse
 from app.services.authentication import check_email_is_taken
-from app.services.security import get_password_hash
 
 router = APIRouter()
 
@@ -64,12 +63,10 @@ async def register(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="E-mail already exists"
         )
-
-    hashed_password = get_password_hash(user_create.password)
-
     access_token = create_access_token(data={"sub": user_create.username})
 
-    user_db = UserInDB(**user_create.dict(), hashed_password=hashed_password)
+    user_db = UserInDB(**user_create.dict())
+    user_db.change_password(user_create.password)
     create_user(db, user_db)
 
     return UserInResponse(

@@ -22,7 +22,9 @@ def get_user_by_username(
             username=db_user.username,
             email=db_user.email,
             disabled=db_user.disabled,
-            hashed_password=db_user.hashed_password
+            created_at=db_user.created_at,
+            hashed_password=db_user.hashed_password,
+            salt=db_user.salt,
         )
 
     return None

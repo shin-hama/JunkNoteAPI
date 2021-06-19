@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import Optional
 
 from pydantic import BaseModel, EmailStr
@@ -25,6 +26,7 @@ class BaseUser(BaseSchema):
     username: str
     email: str
     disabled: bool = False
+    created_at: datetime
 
 
 class UserInResponse(BaseUser):

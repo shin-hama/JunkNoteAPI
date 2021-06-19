@@ -1,4 +1,6 @@
+from app.services.authentication import check_email_is_taken
 from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi.param_functions import Body
 from jose import JWTError, jwt
 from sqlalchemy.orm import Session
 
@@ -9,7 +11,7 @@ from app.api.dependencies.authentication import (
 from app.core.config import ALGORITHM, SECRET_KEY
 from app.db.queries import users as users_db
 from app.models.schemas.memos import Memo, MemoCreate
-from app.models.schemas.users import UserInDB, UserInResponse
+from app.models.schemas.users import UserInDB, UserInResponse, UserInUpdate
 
 
 router = APIRouter()
@@ -63,6 +65,29 @@ async def read_users_me(
 
     return UserInResponse(
         **user.dict(),
+        access_token=token,
+        token_type="bearer"
+    )
+
+
+@router.put("/", response_model=UserInResponse)
+async def update_current_user(
+    user_update: UserInUpdate = Body(..., embed=True, alias="user"),
+    current_user: UserInDB = Depends(get_current_active_user),
+    db: Session = Depends(get_db)
+) -> UserInResponse:
+    if user_update.email and user_update.email != current_user.email:
+        if check_email_is_taken(db, user_update.email):
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="E-mail already exists"
+            )
+
+    updated_user = users_db.update_user(db, current_user, **user_update.dict())
+
+    token = create_access_token(data={"sub": updated_user.username})
+    return UserInResponse(
+        **updated_user.dict(),
         access_token=token,
         token_type="bearer"
     )

@@ -1,5 +1,5 @@
 {
-    "python.pythonPath": "/usr/local/bin/python",
+    "python.pythonPath": ".venv\\Scripts\\python.exe",
     "cSpell.words": [
         "automerged",
         "bcrypt",
