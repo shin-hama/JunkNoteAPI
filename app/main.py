@@ -2,9 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.api.routes.api import router as api_router
-from app.core.config import DEBUG, PROJECT_NAME, VERSION
-
-API_ROOT = "/api"
+from app.core.config import API_PREFIX, DEBUG, PROJECT_NAME, VERSION
 
 
 def get_application() -> FastAPI:
@@ -19,7 +17,7 @@ def get_application() -> FastAPI:
         allow_headers=["*"],
     )
 
-    app.include_router(api_router)
+    app.include_router(api_router, prefix=API_PREFIX)
 
     return app
 

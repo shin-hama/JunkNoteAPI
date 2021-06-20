@@ -6,13 +6,13 @@ from sqlalchemy.orm import Session
 
 from app.api.dependencies.database import get_db
 from app.api.dependencies.authentication import (
-    create_access_token, get_user_by_username, oauth2_scheme
+    create_access_token, get_user_by_username
 )
 from app.core.config import ALGORITHM, SECRET_KEY
 from app.db.queries import users as users_db
 from app.models.schemas.memos import Memo, MemoCreate
 from app.models.schemas.users import UserInDB, UserInResponse, UserInUpdate
-
+from app.services.security import oauth2_scheme
 
 router = APIRouter()
 

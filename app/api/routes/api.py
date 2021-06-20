@@ -3,7 +3,7 @@ from fastapi import APIRouter
 from app.api.routes import authentication, memos, users
 
 
-router = APIRouter(prefix="/api")
+router = APIRouter()
 router.include_router(
     authentication.router, tags=["authentication"], prefix="/users"
 )

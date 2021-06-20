@@ -1,16 +1,12 @@
 from datetime import datetime, timedelta
 from typing import Optional
 
-from fastapi.security import OAuth2PasswordBearer
 from jose import jwt
 from sqlalchemy.orm import Session
 
 from app.core.config import TOKEN_EXPIRE, ALGORITHM, SECRET_KEY
 from app.db.queries import users
 from app.models.schemas.users import UserInDB
-
-
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="api/users/login")
 
 
 def get_user_by_username(

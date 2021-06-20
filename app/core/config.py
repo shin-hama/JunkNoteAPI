@@ -4,9 +4,10 @@ from starlette.config import Config
 
 import app
 
-API_PREFIX: str = "/api"
 
 VERSION: str = app.__version__
+
+API_PREFIX: str = "/api"
 
 config = Config(".env")
 

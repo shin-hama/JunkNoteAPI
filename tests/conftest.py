@@ -61,7 +61,7 @@ def db_container() -> Iterator[None]:
 
 
 @pytest.fixture
-def app() -> FastAPI:
+def app(db_container: None) -> FastAPI:
     """ Get application.
     """
     # To import test.util first to set up the test environment, we will import

@@ -3,18 +3,17 @@ from starlette.status import HTTP_404_NOT_FOUND
 
 
 class TestExistsAPI:
-    def test_routes_exist(
+    def test_exist_api_root(
         self,
         client: TestClient
     ) -> None:
         res = client.get("/api")
-        assert res.status_code != HTTP_404_NOT_FOUND
+        assert res.status_code == HTTP_404_NOT_FOUND
 
 
 class TestGetMemo:
     def test_routes_exist(
         self,
-        db_container: None,
         client: TestClient
     ) -> None:
         res = client.get("/api/memos")
