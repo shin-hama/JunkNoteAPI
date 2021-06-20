@@ -11,7 +11,7 @@ from app.models.schemas.memos import Memo
 router = APIRouter()
 
 
-@router.get("/", response_model=List[Memo])
+@router.get("", response_model=List[Memo])
 def read_memos(
     skip: int = 0, limit: int = 100, db: Session = Depends(get_db)
 ) -> list[Memo]:

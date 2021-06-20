@@ -6,11 +6,16 @@ import docker
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
 import pytest
+from sqlalchemy.orm import sessionmaker
 
+# Import util at first before all of my packages
 from tests.util import (
     is_database_ready, TEST_DB_URL, TEST_MYSQL_DATABASE, TEST_MYSQL_USER,
     TEST_MYSQL_PASSWORD, TEST_MYSQL_PORT
 )
+
+from app.db.queries.users import create_user
+from app.models.schemas.users import UserInDB
 
 
 @pytest.fixture(scope="session")
@@ -75,3 +80,26 @@ def client(app: FastAPI) -> TestClient:
     """ The test client
     """
     return TestClient(app)
+
+
+@pytest.fixture
+def db_session() -> Iterator[sessionmaker]:
+    from app.db.db import SessionLocal
+
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
+
+
+@pytest.fixture
+def test_user(db_session: sessionmaker) -> UserInDB:
+    test_user = create_user(
+        db_session,
+        username="test",
+        email="test@example.com",
+        password="password"
+    )
+
+    return test_user

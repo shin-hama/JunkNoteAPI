@@ -50,7 +50,7 @@ async def login(
 
 
 @router.post(
-    "/",
+    "",
     status_code=status.HTTP_201_CREATED,
     response_model=UserInResponse
 )
@@ -58,17 +58,15 @@ async def register(
     user_create: UserInCreate = Body(..., embed=True, alias="user"),
     db: Session = Depends(get_db)
 ) -> UserInResponse:
+    print(user_create)
     if check_email_is_taken(db, user_create.email):
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="E-mail already exists"
         )
+    user_db = create_user(db, **user_create.dict())
+
     access_token = create_access_token(data={"sub": user_create.username})
-
-    user_db = UserInDB(**user_create.dict())
-    user_db.change_password(user_create.password)
-    create_user(db, user_db)
-
     return UserInResponse(
         **user_db.dict(),
         access_token=access_token,

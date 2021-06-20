@@ -8,13 +8,19 @@ from app.models.schemas.memos import MemoCreate
 from app.models import models
 
 
-def create_user(db: Session, user: UserInDB) -> models.User:
+def create_user(
+    db: Session, username: str, email: str, password: str
+) -> UserInDB:
     now = datetime.now()
-    db_user = models.User(**user.dict(), created_at=now)
+    user = UserInDB(username=username, email=email, created_at=now)
+    user.change_password(password)
+
+    db_user = models.User(**user.dict())
     db.add(db_user)
     db.commit()
     db.refresh(db_user)
-    return db_user
+
+    return user
 
 
 def update_user(

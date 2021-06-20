@@ -1,5 +1,5 @@
+from fastapi import status
 from fastapi.testclient import TestClient
-from starlette.status import HTTP_404_NOT_FOUND
 
 
 class TestExistsAPI:
@@ -8,7 +8,7 @@ class TestExistsAPI:
         client: TestClient
     ) -> None:
         res = client.get("/api")
-        assert res.status_code == HTTP_404_NOT_FOUND
+        assert res.status_code == status.HTTP_404_NOT_FOUND
 
 
 class TestGetMemo:
@@ -17,4 +17,4 @@ class TestGetMemo:
         client: TestClient
     ) -> None:
         res = client.get("/api/memos")
-        assert res.status_code != HTTP_404_NOT_FOUND
+        assert res.status_code == status.HTTP_200_OK

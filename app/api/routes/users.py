@@ -62,7 +62,7 @@ async def read_users_me(
     )
 
 
-@router.put("/", response_model=UserInResponse)
+@router.put("", response_model=UserInResponse)
 async def update_current_user(
     user_update: UserInUpdate = Body(..., embed=True, alias="user"),
     current_user: UserInDB = Depends(get_current_user),
@@ -85,7 +85,7 @@ async def update_current_user(
     )
 
 
-@router.delete("/")
+@router.delete("")
 async def delete_current_user(
     current_user: UserInDB = Depends(get_current_user),
     db: Session = Depends(get_db)
