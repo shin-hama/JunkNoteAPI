@@ -25,7 +25,6 @@ class UserInUpdate(BaseModel):
 class BaseUser(BaseSchema):
     username: str
     email: str
-    disabled: bool = False
     created_at: datetime
 
 

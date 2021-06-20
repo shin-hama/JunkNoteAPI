@@ -38,6 +38,20 @@ def update_user(
     return user
 
 
+def delete_user(
+    db: Session,
+    user: UserInDB
+) -> bool:
+    row_count = db.query(models.User).filter(
+        models.User.email == user.email
+    ).delete()
+    if row_count == 1:
+        db.commit()
+        return True
+    else:
+        return False
+
+
 def create_memo_for_user(
     db: Session, memo: MemoCreate, user_id: int
 ) -> models.Memo:

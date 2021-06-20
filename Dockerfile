@@ -9,7 +9,7 @@ COPY pyproject.toml poetry.lock ./
 RUN poetry export --dev -f requirements.txt > requirements.txt
 
 
-FROM python:3.9-slim
+FROM python:3.9-slim as dev
 
 ENV PYTHONUNBUFFERED=1
 

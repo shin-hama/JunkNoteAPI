@@ -48,17 +48,9 @@ async def get_current_user(
     return user
 
 
-async def get_current_active_user(
-    current_user: UserInDB = Depends(get_current_user)
-) -> UserInDB:
-    if current_user.disabled:
-        raise HTTPException(status_code=400, detail="Inactive user")
-    return current_user
-
-
 @router.get("/me", response_model=UserInResponse)
 async def read_users_me(
-    user: UserInDB = Depends(get_current_active_user)
+    user: UserInDB = Depends(get_current_user)
 ) -> UserInResponse:
     # Set response model to hide hashed_password
     token = create_access_token(data={"sub": user.username})
@@ -73,7 +65,7 @@ async def read_users_me(
 @router.put("/", response_model=UserInResponse)
 async def update_current_user(
     user_update: UserInUpdate = Body(..., embed=True, alias="user"),
-    current_user: UserInDB = Depends(get_current_active_user),
+    current_user: UserInDB = Depends(get_current_user),
     db: Session = Depends(get_db)
 ) -> UserInResponse:
     if user_update.email and user_update.email != current_user.email:
@@ -91,3 +83,15 @@ async def update_current_user(
         access_token=token,
         token_type="bearer"
     )
+
+
+@router.delete("/")
+async def delete_current_user(
+    current_user: UserInDB = Depends(get_current_user),
+    db: Session = Depends(get_db)
+) -> None:
+    if users_db.delete_user(db, current_user) is False:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Fail to delete user"
+        )
