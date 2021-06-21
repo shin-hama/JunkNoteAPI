@@ -108,3 +108,27 @@ def test_user(db_session: sessionmaker) -> Iterator[UserInDB]:
         yield test_user
     finally:
         delete_user(db_session, test_user)
+
+
+@pytest.fixture
+def authorization_prefix() -> str:
+    from app.core.config import TOKEN_PREFIX
+
+    return TOKEN_PREFIX
+
+
+@pytest.fixture
+def token(test_user: UserInDB) -> str:
+    from app.api.dependencies.authentication import create_access_token
+    return create_access_token({"sub": test_user.username})
+
+
+@pytest.fixture
+def authorized_client(
+    client: TestClient, token: str, authorization_prefix: str
+) -> TestClient:
+    client.headers = {
+        "Authorization": f"{authorization_prefix} {token}",
+        **client.headers,
+    }
+    return client

@@ -17,7 +17,7 @@ def authenticate_user(
 ) -> Optional[UserInDB]:
     """ Get user data that is matched username and password
     """
-    user = _get_user_by_username(db, username)
+    user = get_user_by_username(db, username)
     if not user:
         return None
     if not user.verify_password(password):
@@ -36,7 +36,7 @@ def create_access_token(data: dict[str, object]) -> str:
     return encode_jwt
 
 
-async def get_current_user(
+def get_current_user(
     token: str = Depends(oauth2_scheme),
     db: Session = Depends(get_db)
 ) -> UserInDB:
@@ -53,14 +53,14 @@ async def get_current_user(
     except JWTError:
         raise credentials_exception
 
-    user = _get_user_by_username(db, username=username)
+    user = get_user_by_username(db, username=username)
     if user is None:
         raise credentials_exception
 
     return user
 
 
-def _get_user_by_username(
+def get_user_by_username(
     db: Session, username: str
 ) -> Optional[UserInDB]:
     db_user = users.get_user_by_username(db, username)

@@ -7,6 +7,7 @@ from app.api.dependencies.database import get_db
 from app.api.dependencies.authentication import (
     create_access_token, get_current_user
 )
+from app.core.config import TOKEN_PREFIX
 from app.db.queries import users as users_db
 from app.models.schemas.memos import Memo, MemoCreate
 from app.models.schemas.users import UserInDB, UserInResponse, UserInUpdate
@@ -35,7 +36,7 @@ async def read_users_me(
     return UserInResponse(
         **user.dict(),
         access_token=token,
-        token_type="bearer"
+        token_type=TOKEN_PREFIX
     )
 
 
@@ -62,7 +63,7 @@ async def update_current_user(
     return UserInResponse(
         **updated_user.dict(),
         access_token=token,
-        token_type="bearer"
+        token_type=TOKEN_PREFIX
     )
 
 

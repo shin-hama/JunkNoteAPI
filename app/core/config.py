@@ -9,6 +9,8 @@ VERSION: str = app.__version__
 
 API_PREFIX: str = "/api"
 
+TOKEN_PREFIX = "bearer"
+
 config = Config(".env")
 
 DEBUG: bool = config("DEBUG", cast=bool, default=False)
