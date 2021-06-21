@@ -1,32 +1,19 @@
-from typing import Optional
-
 from fastapi import APIRouter, Body, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 
 from app.api.dependencies.authentication import (
-    create_access_token, get_user_by_username
+    authenticate_user, create_access_token
 )
 from app.api.dependencies.database import get_db
 from app.db.queries.users import create_user
-from app.models.schemas.users import UserInCreate, UserInDB, UserInResponse
+from app.models.schemas.users import UserInCreate, UserInResponse
 from app.services.authentication import check_email_is_taken
 
 router = APIRouter()
 
 
-def authenticate_user(
-    db: Session, username: str, password: str
-) -> Optional[UserInDB]:
-    user = get_user_by_username(db, username)
-    if not user:
-        return None
-    if not user.verify_password(password):
-        return None
-    return user
-
-
-@router.post("/login", response_model=UserInResponse)
+@router.post("/login", response_model=UserInResponse, name="auth:login")
 async def login(
     form_data: OAuth2PasswordRequestForm = Depends(),
     db: Session = Depends(get_db)
@@ -52,13 +39,13 @@ async def login(
 @router.post(
     "",
     status_code=status.HTTP_201_CREATED,
-    response_model=UserInResponse
+    response_model=UserInResponse,
+    name="auth:register"
 )
 async def register(
     user_create: UserInCreate = Body(..., embed=True, alias="user"),
     db: Session = Depends(get_db)
 ) -> UserInResponse:
-    print(user_create)
     if check_email_is_taken(db, user_create.email):
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
