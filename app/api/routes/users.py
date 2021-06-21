@@ -21,7 +21,11 @@ def create_memo_for_user(
     return users_db.create_memo_for_user(db=db, memo=memo, user_id=user_id)
 
 
-@router.get("/me", response_model=UserInResponse)
+@router.get(
+    "/me",
+    response_model=UserInResponse,
+    name="users:get-current-user"
+)
 async def read_users_me(
     user: UserInDB = Depends(get_current_user)
 ) -> UserInResponse:
@@ -35,7 +39,11 @@ async def read_users_me(
     )
 
 
-@router.put("", response_model=UserInResponse)
+@router.put(
+    "",
+    response_model=UserInResponse,
+    name="users:update-current-user"
+)
 async def update_current_user(
     user_update: UserInUpdate = Body(..., embed=True, alias="user"),
     current_user: UserInDB = Depends(get_current_user),
