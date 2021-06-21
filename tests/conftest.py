@@ -14,7 +14,7 @@ from tests.util import (
     TEST_MYSQL_PASSWORD, TEST_MYSQL_PORT
 )
 
-from app.db.queries.users import create_user
+from app.db.queries.users import create_user, delete_user
 from app.models.schemas.users import UserInDB
 
 
@@ -43,7 +43,6 @@ def db_container() -> Iterator[None]:
         # Repeat the connection test for 30 seconds.
         for i in range(30 * 10):
             if is_database_ready():
-                print(f"success to connect {i/10} sec")
                 break
             else:
                 time.sleep(0.1)
@@ -94,7 +93,10 @@ def db_session() -> Iterator[sessionmaker]:
 
 
 @pytest.fixture
-def test_user(db_session: sessionmaker) -> UserInDB:
+def test_user(db_session: sessionmaker) -> Iterator[UserInDB]:
+    """ Create a test user data on database, and delete it after running each
+    test function.
+    """
     test_user = create_user(
         db_session,
         username="test",
@@ -102,4 +104,7 @@ def test_user(db_session: sessionmaker) -> UserInDB:
         password="password"
     )
 
-    return test_user
+    try:
+        yield test_user
+    finally:
+        delete_user(db_session, test_user)
