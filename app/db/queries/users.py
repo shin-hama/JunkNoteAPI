@@ -51,11 +51,7 @@ def delete_user_by_email(
     row_count = db.query(models.User).filter(
         models.User.email == email
     ).delete()
-    if row_count == 1:
-        db.commit()
-        return True
-    else:
-        return False
+    db.commit()
 
 
 def create_memo_for_user(
