@@ -47,8 +47,8 @@ def update_user(
 def delete_user_by_email(
     db: Session,
     email: str
-) -> bool:
-    row_count = db.query(models.User).filter(
+) -> None:
+    db.query(models.User).filter(
         models.User.email == email
     ).delete()
     db.commit()
