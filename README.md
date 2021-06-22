@@ -16,6 +16,18 @@ If you wants to know the usage of api, you can access <http://localhost:8000/doc
 
 ## Development
 
+### Add .env
+
+Create `.env` file at repository root.
+This file include database settings and jwt parameters.
+You can edit with any value according to `.env.example`.
+
+For `SECRET_KEY`, you have to create it with following command.
+
+``` shell
+> echo SECRET_KEY=$(openssl rand -hex 32) >> .env
+```
+
 ### Migrate Database
 
 Migration is used `alembic`. Please see [documentation](https://alembic.sqlalchemy.org/en/latest/) about detail usage.

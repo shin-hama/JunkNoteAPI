@@ -1,7 +1,13 @@
 import bcrypt
+from fastapi.security import OAuth2PasswordBearer
 from passlib.context import CryptContext
 
+from app.core.config import API_PREFIX
+
+
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl=f"{API_PREFIX}/users/login")
 
 
 def generate_salt() -> str:

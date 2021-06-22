@@ -1,4 +1,4 @@
-from sqlalchemy import Boolean, Column, DateTime, ForeignKey, Integer, String
+import sqlalchemy as sa
 from sqlalchemy.orm import relationship
 
 from app.db.db import Base
@@ -7,12 +7,12 @@ from app.db.db import Base
 class User(Base):
     __tablename__ = "users"
 
-    id = Column(Integer, primary_key=True, index=True)
-    email = Column(String(128), index=True)
-    user_id = Column(String(32), index=True)
-    password = Column(String(32))
-    name = Column(String(32))
-    created_at = Column(DateTime, index=True)
+    id = sa.Column(sa.Integer, primary_key=True, index=True)
+    username = sa.Column(sa.Text, nullable=False)
+    email = sa.Column(sa.Text, index=True, nullable=False, unique=True)
+    salt = sa.Column(sa.Text, nullable=False)
+    hashed_password = sa.Column(sa.String(60), nullable=False)
+    created_at = sa.Column(sa.DateTime, index=True)
 
     memos = relationship("Memo", back_populates="owner")
 
@@ -20,11 +20,11 @@ class User(Base):
 class Memo(Base):
     __tablename__ = "memos"
 
-    id = Column(Integer, primary_key=True, index=True)
-    containts = Column(String(2000))
-    datetime = Column(DateTime, index=True)
-    reference = Column(String(2000))
-    owner_id = Column(Integer, ForeignKey("users.id"))
-    is_removed = Column(Boolean, default=False, index=True)
+    id = sa.Column(sa.Integer, primary_key=True, index=True)
+    containts = sa.Column(sa.Text)
+    datetime = sa.Column(sa.DateTime, index=True)
+    reference = sa.Column(sa.Text)
+    owner_id = sa.Column(sa.Integer, sa.ForeignKey("users.id"))
+    is_removed = sa.Column(sa.Boolean, default=False, index=True)
 
     owner = relationship("User", back_populates="memos")
