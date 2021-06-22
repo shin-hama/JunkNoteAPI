@@ -44,12 +44,12 @@ def update_user(
     return user
 
 
-def delete_user(
+def delete_user_by_email(
     db: Session,
-    user: UserInDB
+    email: str
 ) -> bool:
     row_count = db.query(models.User).filter(
-        models.User.email == user.email
+        models.User.email == email
     ).delete()
     if row_count == 1:
         db.commit()

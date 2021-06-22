@@ -1,10 +1,12 @@
 from typing import Any
+
 from fastapi import FastAPI, status
 from fastapi.testclient import TestClient
 import pytest
+from sqlalchemy.orm.session import Session
 
 from app.api.dependencies.authentication import get_user_by_username
-from app.db.queries.users import delete_user
+from app.db.queries.users import create_user, delete_user_by_email
 from app.models.schemas.users import UserInDB, UserInResponse
 
 
@@ -55,7 +57,7 @@ def test_user_can_retrieve_own_profile(
     authorized_client: TestClient,
     test_user: UserInDB,
     token: str,
-    db_session: None,
+    db_session: Session,
 ) -> None:
     res = authorized_client.get(app.url_path_for("users:get-current-user"))
     assert res.status_code == status.HTTP_200_OK
@@ -74,7 +76,7 @@ def test_user_can_retrieve_own_profile(
 def test_user_can_update_own_profile(
     app: FastAPI,
     authorized_client: TestClient,
-    db_session: None,
+    db_session: Session,
     update_value: str,
     update_field: str,
 ) -> None:
@@ -86,23 +88,15 @@ def test_user_can_update_own_profile(
 
     user_profile = UserInResponse(**res.json()).dict()
     assert user_profile[update_field] == update_value
-    user = get_user_by_username(
-        db_session, username=user_profile["username"]
-    )
-    print(user)
 
-    from datetime import datetime
-    delete_user(db_session, UserInDB(
-        username="",
-        created_at=datetime.now(),
-        email=user_profile["email"])
-    )
+    # Delete updated data not to effect another test because unable to delete
+    # when change email
+    delete_user_by_email(db_session, email=user_profile["email"])
 
 
 def test_user_can_change_password(
     app: FastAPI,
     authorized_client: TestClient,
-    db_session: None
 ) -> None:
     res = authorized_client.put(
         app.url_path_for("users:update-current-user"),
@@ -111,10 +105,39 @@ def test_user_can_change_password(
     assert res.status_code == status.HTTP_200_OK
     user_profile = UserInResponse(**res.json())
 
-    # TODO: Need to create new session to get updated value
-    # create db_session on every query running
-    # user = get_user_by_username(
-    #     db_session, username=user_profile.username
-    # )
-    # assert user is not None
-    # assert user.verify_password("new_password")
+    # Create new session to check update by another session of api
+    from app.db.db import SessionLocal
+
+    db = SessionLocal()
+    user = get_user_by_username(
+        db, username=user_profile.username
+    )
+    assert user is not None
+    assert user.verify_password("new_password")
+    db.close()
+
+
+def test_user_can_not_take_already_used_credentials(
+    app: FastAPI,
+    authorized_client: TestClient,
+    db_session: Session,
+) -> None:
+    """ Cannot Email is unique
+    """
+    unique_key = "email"
+    user_dict = {
+        "username": "new_user",
+        "password": "password",
+        unique_key: "new_user@email.com",
+    }
+    create_user(db_session, **user_dict)
+
+    res = authorized_client.put(
+        app.url_path_for("users:update-current-user"),
+        json={"user": {unique_key: user_dict[unique_key]}},
+    )
+    assert res.status_code == status.HTTP_400_BAD_REQUEST
+
+    # Delete updated data not to effect another test because unable to delete
+    # when change email
+    delete_user_by_email(db_session, email=user_dict["email"])

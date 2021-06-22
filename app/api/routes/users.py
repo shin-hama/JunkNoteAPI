@@ -72,7 +72,7 @@ async def delete_current_user(
     current_user: UserInDB = Depends(get_current_user),
     db: Session = Depends(get_db)
 ) -> None:
-    if users_db.delete_user(db, current_user) is False:
+    if users_db.delete_user_by_email(db, current_user.email) is False:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Fail to delete user"

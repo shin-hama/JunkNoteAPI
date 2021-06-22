@@ -6,7 +6,7 @@ import docker
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
 import pytest
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm.session import Session
 
 # Import util at first before all of my packages
 from tests.util import (
@@ -14,7 +14,7 @@ from tests.util import (
     TEST_MYSQL_PASSWORD, TEST_MYSQL_PORT
 )
 
-from app.db.queries.users import create_user, delete_user
+from app.db.queries.users import create_user, delete_user_by_email
 from app.models.schemas.users import UserInDB
 
 
@@ -82,7 +82,7 @@ def client(app: FastAPI) -> TestClient:
 
 
 @pytest.fixture
-def db_session() -> Iterator[sessionmaker]:
+def db_session() -> Iterator[Session]:
     from app.db.db import SessionLocal
 
     db = SessionLocal()
@@ -93,7 +93,7 @@ def db_session() -> Iterator[sessionmaker]:
 
 
 @pytest.fixture
-def test_user(db_session: sessionmaker) -> Iterator[UserInDB]:
+def test_user(db_session: Session) -> Iterator[UserInDB]:
     """ Create a test user data on database, and delete it after running each
     test function.
     """
@@ -107,7 +107,7 @@ def test_user(db_session: sessionmaker) -> Iterator[UserInDB]:
     try:
         yield test_user
     finally:
-        delete_user(db_session, test_user)
+        delete_user_by_email(db_session, test_user.email)
 
 
 @pytest.fixture
