@@ -6,7 +6,7 @@ from jose import JWTError, jwt
 from sqlalchemy.orm import Session
 
 from app.api.dependencies.database import get_db
-from app.core.config import TOKEN_EXPIRE, ALGORITHM, SECRET_KEY
+from app.core.config import ACCESS_TOKEN_EXPIRE_MINUTES, ALGORITHM, SECRET_KEY
 from app.db.queries import users
 from app.models.schemas.users import UserInDB
 from app.services.security import oauth2_scheme
@@ -26,7 +26,7 @@ def authenticate_user(
 
 
 def create_access_token(data: dict[str, object]) -> str:
-    expires_delta = timedelta(minutes=TOKEN_EXPIRE)
+    expires_delta = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
 
     to_encode = data.copy()
     expire = datetime.utcnow() + expires_delta

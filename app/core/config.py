@@ -1,6 +1,7 @@
 import logging
 
 from starlette.config import Config
+from starlette.datastructures import Secret
 
 import app
 
@@ -31,9 +32,9 @@ DATABASE_URL = config(
 
 # to get a string like this run:
 # openssl rand -hex 32
-SECRET_KEY = config("SECRET_KEY")
-ALGORITHM = config("ALGORITHM")
-TOKEN_EXPIRE = config("TOKEN_EXPIRE", cast=int)
+SECRET_KEY: Secret = config("SECRET_KEY", cast=Secret)
+ALGORITHM = config("ALGORITHM", default="HS256")
+ACCESS_TOKEN_EXPIRE_MINUTES = config("TOKEN_EXPIRE", cast=int, default=60)
 
 PROJECT_NAME: str = config("PROJECT_NAME", default="Junk Note API")
 
