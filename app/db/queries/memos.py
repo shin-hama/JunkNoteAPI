@@ -28,7 +28,7 @@ def create_memo_for_user(
 
 
 def update_memo(
-    memo_id: int, db: Session, memo_update: MemoInUpdate,
+    db: Session, memo_id: int, memo_update: MemoInUpdate,
 ) -> MemoInUpdate:
     memo_update.datetime = datetime.now()
     db.query(models.Memo).filter(
@@ -37,3 +37,14 @@ def update_memo(
     db.commit()
 
     return memo_update
+
+
+def delete_memo_by_id(db: Session, memo_id: int) -> bool:
+    memo_rows = db.query(models.Memo).filter(
+        models.Memo.id == memo_id
+    ).delete()
+    if memo_rows == 1:
+        db.commit()
+        return True
+    else:
+        return False

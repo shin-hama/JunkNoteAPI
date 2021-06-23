@@ -9,14 +9,10 @@ from app.models import models
 
 def check_owner_is_collect(
     memo_id: int, db: Session, owner: models.User
-) -> None:
+) -> bool:
     memo = get_memo_by_id(db=db, id=memo_id)
 
-    if memo.owner != owner:
-        raise HTTPException(
-            status_code=status.HTTP_405_METHOD_NOT_ALLOWED,
-            detail="Invalid owner"
-        )
+    return memo.owner == owner
 
 
 def get_memo_by_id(db: Session, id: int) -> models.Memo:

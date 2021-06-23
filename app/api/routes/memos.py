@@ -1,6 +1,6 @@
 from typing import List
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
 from app.api.dependencies.authentication import get_current_user
@@ -53,10 +53,35 @@ def update_memo(
     db: Session = Depends(get_db),
     current_user: models.User = Depends(get_current_user)
 ) -> MemoInResponce:
-    """ Update memo that the current user has.
+    """ Update memo that the current user has. logical delete is done too.
     """
-    check_owner_is_collect(memo_id, db, current_user)
+    if check_owner_is_collect(memo_id, db, current_user) is False:
+        raise HTTPException(
+            status_code=status.HTTP_405_METHOD_NOT_ALLOWED,
+            detail="Invalid owner",
+        )
 
-    updated_memo = memos.update_memo(memo_id, db, memo_update)
+    updated_memo = memos.update_memo(db, memo_id, memo_update)
 
     return MemoInResponce(id=memo_id, **updated_memo.dict())
+
+
+@router.delete("/{memo_id}", name="memos:delete")
+def delete_memo(
+    memo_id: int,
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(get_current_user)
+) -> dict[str, str]:
+    if check_owner_is_collect(memo_id, db, current_user) is False:
+        raise HTTPException(
+            status_code=status.HTTP_405_METHOD_NOT_ALLOWED,
+            detail="Invalid owner",
+        )
+
+    if memos.delete_memo_by_id(db, memo_id) is False:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Incorrect memo",
+        )
+
+    return {"status": "Success to delete"}
