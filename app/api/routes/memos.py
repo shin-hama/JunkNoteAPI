@@ -1,12 +1,11 @@
 from typing import List
 
-from fastapi import APIRouter, Depends, status
-from fastapi.exceptions import HTTPException
+from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
-from sqlalchemy.orm.exc import NoResultFound
 
 from app.api.dependencies.authentication import get_current_user
 from app.api.dependencies.database import get_db
+from app.api.dependencies.memos import check_owner_is_collect, get_memo_by_id
 from app.db.queries import memos
 from app.models import models
 from app.models.schemas.memos import MemoInResponce, MemoInCreate, MemoInUpdate
@@ -31,7 +30,7 @@ def read_memos_for_current_user(
 def read_memo(
     memo_id: int, db: Session = Depends(get_db)
 ) -> MemoInResponce:
-    return memos.get_memo(db=db, memo_id=memo_id)
+    return get_memo_by_id(db=db, id=memo_id)
 
 
 @router.post("", response_model=MemoInResponce, name="memos:create-own-memo")
@@ -56,19 +55,7 @@ def update_memo(
 ) -> MemoInResponce:
     """ Update memo that the current user has.
     """
-    try:
-        memo = memos.get_memo(db=db, memo_id=memo_id)
-    except NoResultFound:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Your requested id does not exist."
-        )
-
-    if memo.owner != current_user:
-        raise HTTPException(
-            status_code=status.HTTP_405_METHOD_NOT_ALLOWED,
-            detail="Invalid owner"
-        )
+    check_owner_is_collect(memo_id, db, current_user)
 
     updated_memo = memos.update_memo(memo_id, db, memo_update)
 
