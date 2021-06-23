@@ -16,7 +16,7 @@ router = APIRouter()
 @router.get(
     "",
     response_model=List[MemoInResponce],
-    name="memos:get-own-memos"
+    name="memos:get-own-memos",
 )
 def read_memos_for_current_user(
     skip: int = 0, limit: int = 100,
@@ -32,7 +32,7 @@ def read_memo(
     return memos.get_memo(db=db, memo_id=memo_id)
 
 
-@router.post("", response_model=MemoInResponce)
+@router.post("", response_model=MemoInResponce, name="memos:create-own-memos")
 def create_memo_for_user(
     memo: MemoCreate,
     db: Session = Depends(get_db),
