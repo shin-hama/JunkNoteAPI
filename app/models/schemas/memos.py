@@ -4,9 +4,14 @@ from typing import Optional
 from app.models.schemas.base import BaseSchema
 
 
-class MemoCreate(BaseSchema):
-    containts: str
+class MemoInCreate(BaseSchema):
+    containts: Optional[str] = None
     reference: Optional[str] = None
+
+
+class MemoInUpdate(MemoInCreate):
+    is_removed: bool = False
+    datetime: Optional[datetime] = None
 
 
 class MemoBase(BaseSchema):
