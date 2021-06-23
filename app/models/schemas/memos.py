@@ -4,20 +4,21 @@ from typing import Optional
 from app.models.schemas.base import BaseSchema
 
 
-class MemoBase(BaseSchema):
+class MemoCreate(BaseSchema):
     containts: str
     reference: Optional[str] = None
 
 
-class MemoCreate(MemoBase):
-    pass
+class MemoBase(BaseSchema):
+    containts: str
+    reference: Optional[str] = None
+    datetime: datetime
 
 
 class MemoInDB(MemoBase):
     id: int
     owner_id: int
     is_removed: bool = False
-    datetime: datetime
 
 
 class MemoInResponce(MemoBase):

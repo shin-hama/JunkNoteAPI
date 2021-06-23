@@ -4,7 +4,6 @@ from typing import Optional
 from sqlalchemy.orm import Session
 
 from app.models.schemas.users import UserInDB
-from app.models.schemas.memos import MemoCreate
 from app.models import models
 
 
@@ -52,16 +51,6 @@ def delete_user_by_email(
         models.User.email == email
     ).delete()
     db.commit()
-
-
-def create_memo_for_user(
-    db: Session, memo: MemoCreate, user_id: int
-) -> models.Memo:
-    db_memo = models.Memo(**memo.dict(), owner_id=user_id)
-    db.add(db_memo)
-    db.commit()
-    db.refresh(db_memo)
-    return db_memo
 
 
 def get_user_by_username(db: Session, username: str) -> Optional[models.User]:

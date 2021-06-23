@@ -8,18 +8,10 @@ from app.api.dependencies import authentication as auth
 from app.core.config import TOKEN_PREFIX
 from app.db.queries import users as users_db
 from app.models import models
-from app.models.schemas.memos import MemoInResponce, MemoCreate
 from app.models.schemas.users import UserInDB, UserInResponse, UserInUpdate
 
 
 router = APIRouter()
-
-
-@router.post("/{user_id}/memos", response_model=MemoInResponce)
-def create_memo_for_user(
-    user_id: int, memo: MemoCreate, db: Session = Depends(get_db)
-) -> MemoInResponce:
-    return users_db.create_memo_for_user(db=db, memo=memo, user_id=user_id)
 
 
 @router.get(
