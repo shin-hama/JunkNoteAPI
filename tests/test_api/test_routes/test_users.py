@@ -5,7 +5,7 @@ from fastapi.testclient import TestClient
 import pytest
 from sqlalchemy.orm.session import Session
 
-from app.api.dependencies.authentication import get_user_by_username
+from app.api.dependencies.authentication import get_current_user
 from app.db.queries.users import create_user, delete_user_by_email
 from app.models.schemas.users import UserInDB, UserInResponse
 
@@ -109,10 +109,8 @@ def test_user_can_change_password(
     from app.db.db import SessionLocal
 
     db = SessionLocal()
-    user = get_user_by_username(
-        db, username=user_profile.username
-    )
-    assert user is not None
+    user = get_current_user(db, user_profile.username)
+    UserInDB(**user.__dict__)
     assert user.verify_password("new_password")
     db.close()
 

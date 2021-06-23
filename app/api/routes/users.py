@@ -4,21 +4,21 @@ from fastapi.param_functions import Body
 from sqlalchemy.orm import Session
 
 from app.api.dependencies.database import get_db
-from app.api.dependencies.authentication import (
-    create_access_token, get_current_user
-)
+from app.api.dependencies import authentication as auth
 from app.core.config import TOKEN_PREFIX
 from app.db.queries import users as users_db
-from app.models.schemas.memos import Memo, MemoCreate
+from app.models import models
+from app.models.schemas.memos import MemoInResponce, MemoCreate
 from app.models.schemas.users import UserInDB, UserInResponse, UserInUpdate
+
 
 router = APIRouter()
 
 
-@router.post("/{user_id}/memos", response_model=Memo)
+@router.post("/{user_id}/memos", response_model=MemoInResponce)
 def create_memo_for_user(
     user_id: int, memo: MemoCreate, db: Session = Depends(get_db)
-) -> Memo:
+) -> MemoInResponce:
     return users_db.create_memo_for_user(db=db, memo=memo, user_id=user_id)
 
 
@@ -28,13 +28,13 @@ def create_memo_for_user(
     name="users:get-current-user"
 )
 async def read_users_me(
-    user: UserInDB = Depends(get_current_user)
+    user: models.User = Depends(auth.get_current_user)
 ) -> UserInResponse:
     # Set response model to hide hashed_password
-    token = create_access_token(data={"sub": user.username})
+    token = auth.create_access_token(data={"sub": user.username})
 
     return UserInResponse(
-        **user.dict(),
+        **user.__dict__,
         access_token=token,
         token_type=TOKEN_PREFIX
     )
@@ -47,7 +47,7 @@ async def read_users_me(
 )
 async def update_current_user(
     user_update: UserInUpdate = Body(..., embed=True, alias="user"),
-    current_user: UserInDB = Depends(get_current_user),
+    current_user: models.User = Depends(auth.get_current_user),
     db: Session = Depends(get_db)
 ) -> UserInResponse:
     if user_update.email and user_update.email != current_user.email:
@@ -57,9 +57,11 @@ async def update_current_user(
                 detail="E-mail already exists"
             )
 
-    updated_user = users_db.update_user(db, current_user, **user_update.dict())
+    updated_user = users_db.update_user(
+        db, UserInDB(**current_user.__dict__), **user_update.dict()
+    )
 
-    token = create_access_token(data={"sub": updated_user.username})
+    token = auth.create_access_token(data={"sub": updated_user.username})
     return UserInResponse(
         **updated_user.dict(),
         access_token=token,
@@ -69,7 +71,7 @@ async def update_current_user(
 
 @router.delete("")
 async def delete_current_user(
-    current_user: UserInDB = Depends(get_current_user),
+    current_user: models.User = Depends(auth.get_current_user),
     db: Session = Depends(get_db)
 ) -> None:
     users_db.delete_user_by_email(db, current_user.email)

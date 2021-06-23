@@ -8,6 +8,7 @@ from sqlalchemy.orm import Session
 from app.api.dependencies.database import get_db
 from app.core.config import ACCESS_TOKEN_EXPIRE_MINUTES, ALGORITHM, SECRET_KEY
 from app.db.queries import users
+from app.models import models
 from app.models.schemas.users import UserInDB
 from app.services.security import oauth2_scheme
 
@@ -17,9 +18,10 @@ def authenticate_user(
 ) -> Optional[UserInDB]:
     """ Get user data that is matched username and password
     """
-    user = get_user_by_username(db, username)
-    if not user:
+    db_user = users.get_user_by_username(db, username)
+    if not db_user:
         return None
+    user = UserInDB(**db_user.__dict__)
     if not user.verify_password(password):
         return None
     return user
@@ -39,7 +41,7 @@ def create_access_token(data: dict[str, object]) -> str:
 def get_current_user(
     token: str = Depends(oauth2_scheme),
     db: Session = Depends(get_db)
-) -> UserInDB:
+) -> models.User:
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Couldn't invalid credentials",
@@ -53,24 +55,8 @@ def get_current_user(
     except JWTError:
         raise credentials_exception
 
-    user = get_user_by_username(db, username=username)
+    user = users.get_user_by_username(db, username)
     if user is None:
         raise credentials_exception
 
     return user
-
-
-def get_user_by_username(
-    db: Session, username: str
-) -> Optional[UserInDB]:
-    db_user = users.get_user_by_username(db, username)
-    if db_user:
-        return UserInDB(
-            username=db_user.username,
-            email=db_user.email,
-            created_at=db_user.created_at,
-            hashed_password=db_user.hashed_password,
-            salt=db_user.salt,
-        )
-
-    return None
