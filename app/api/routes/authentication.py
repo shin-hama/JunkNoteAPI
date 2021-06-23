@@ -53,7 +53,7 @@ async def register(
 
     access_token = auth.create_access_token(data={"sub": user_create.username})
     return UserInResponse(
-        **user_db.dict(),
+        **user_db.__dict__,
         access_token=access_token,
         token_type="bearer"
     )

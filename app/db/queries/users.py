@@ -9,7 +9,7 @@ from app.models import models
 
 def create_user(
     db: Session, username: str, email: str, password: str
-) -> UserInDB:
+) -> models.User:
     now = datetime.now()
     user = UserInDB(username=username, email=email, created_at=now)
     user.change_password(password)
@@ -19,7 +19,7 @@ def create_user(
     db.commit()
     db.refresh(db_user)
 
-    return user
+    return db_user
 
 
 def update_user(
@@ -43,13 +43,11 @@ def update_user(
     return user
 
 
-def delete_user_by_email(
+def delete_user(
     db: Session,
-    email: str
+    user: models.User
 ) -> None:
-    db.query(models.User).filter(
-        models.User.email == email
-    ).delete()
+    db.delete(user)
     db.commit()
 
 

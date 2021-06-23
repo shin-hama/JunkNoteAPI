@@ -66,4 +66,4 @@ async def delete_current_user(
     current_user: models.User = Depends(auth.get_current_user),
     db: Session = Depends(get_db)
 ) -> None:
-    users_db.delete_user_by_email(db, current_user.email)
+    users_db.delete_user(db, current_user)

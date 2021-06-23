@@ -14,8 +14,8 @@ from tests.util import (
     TEST_MYSQL_PASSWORD, TEST_MYSQL_PORT
 )
 
-from app.db.queries.users import create_user, delete_user_by_email
-from app.models.schemas.users import UserInDB
+from app.db.queries.users import create_user, delete_user
+from app.models import models
 
 
 @pytest.fixture(scope="session")
@@ -93,7 +93,7 @@ def db_session() -> Iterator[Session]:
 
 
 @pytest.fixture
-def test_user(db_session: Session) -> Iterator[UserInDB]:
+def test_user(db_session: Session) -> Iterator[models.User]:
     """ Create a test user data on database, and delete it after running each
     test function.
     """
@@ -107,7 +107,7 @@ def test_user(db_session: Session) -> Iterator[UserInDB]:
     try:
         yield test_user
     finally:
-        delete_user_by_email(db_session, test_user.email)
+        delete_user(db_session, test_user)
 
 
 @pytest.fixture
@@ -118,7 +118,7 @@ def authorization_prefix() -> str:
 
 
 @pytest.fixture
-def token(test_user: UserInDB) -> str:
+def token(test_user: models.User) -> str:
     from app.api.dependencies.authentication import create_access_token
     return create_access_token({"sub": test_user.username})
 
