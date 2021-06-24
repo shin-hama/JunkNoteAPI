@@ -25,7 +25,7 @@ class UserInUpdate(BaseModel):
 class BaseUser(BaseSchema):
     username: str
     email: str
-    created_at: datetime
+    created: Optional[datetime] = None
 
 
 class UserInResponse(BaseUser):

@@ -11,13 +11,12 @@ class MemoInCreate(BaseSchema):
 
 class MemoInUpdate(MemoInCreate):
     is_removed: bool = False
-    datetime: Optional[datetime] = None
 
 
 class MemoBase(BaseSchema):
     containts: str
     reference: Optional[str] = None
-    datetime: datetime
+    created: Optional[datetime] = None
 
 
 class MemoInDB(MemoBase):

@@ -1,4 +1,3 @@
-from datetime import datetime
 from typing import Optional
 
 from sqlalchemy.orm import Session
@@ -10,8 +9,7 @@ from app.models import models
 def create_user(
     db: Session, username: str, email: str, password: str
 ) -> models.User:
-    now = datetime.now()
-    user = UserInDB(username=username, email=email, created_at=now)
+    user = UserInDB(username=username, email=email)
     user.change_password(password)
 
     db_user = models.User(**user.dict())

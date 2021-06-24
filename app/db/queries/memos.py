@@ -1,5 +1,3 @@
-from datetime import datetime
-
 from sqlalchemy.orm import Session
 
 from app.models import models
@@ -19,8 +17,7 @@ def get_memos(
 def create_memo_for_user(
     db: Session, memo: MemoInCreate, user_id: int
 ) -> models.Memo:
-    now = datetime.now()
-    db_memo = models.Memo(**memo.dict(), owner_id=user_id, datetime=now)
+    db_memo = models.Memo(**memo.dict(), owner_id=user_id)
     db.add(db_memo)
     db.commit()
     db.refresh(db_memo)
@@ -30,7 +27,6 @@ def create_memo_for_user(
 def update_memo(
     db: Session, memo_id: int, memo_update: MemoInUpdate,
 ) -> MemoInUpdate:
-    memo_update.datetime = datetime.now()
     db.query(models.Memo).filter(
         models.Memo.id == memo_id
     ).update(memo_update.dict())
