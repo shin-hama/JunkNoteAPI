@@ -1,5 +1,6 @@
 import sqlalchemy as sa
 from sqlalchemy.orm import relationship
+from sqlalchemy.orm.relationships import RelationshipProperty
 from sqlalchemy.sql import func
 
 from app.db.db import Base
@@ -20,10 +21,11 @@ class User(Base):
         onupdate=func.now()
     )
 
-    memos = relationship(
+    memos: RelationshipProperty = relationship(
         "Memo",
         back_populates="owner",
-        cascade="all, delete-orphan"
+        cascade="all, delete-orphan",
+        lazy="dynamic",
     )
 
 
@@ -42,4 +44,6 @@ class Memo(Base):
     owner_id = sa.Column(sa.Integer, sa.ForeignKey("users.id"))
     is_removed = sa.Column(sa.Boolean, default=False, index=True)
 
-    owner = relationship("User", back_populates="memos")
+    owner: RelationshipProperty = relationship(
+        "User", back_populates="memos"
+    )
