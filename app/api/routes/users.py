@@ -61,7 +61,7 @@ async def update_current_user(
     )
 
 
-@router.delete("")
+@router.delete("", name="memos:delete")
 async def delete_current_user(
     current_user: models.User = Depends(auth.get_current_user),
     db: Session = Depends(get_db)

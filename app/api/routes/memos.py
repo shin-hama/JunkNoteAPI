@@ -1,6 +1,7 @@
 from typing import List
 
 from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi.param_functions import Body
 from sqlalchemy.orm import Session
 from sqlalchemy.sql.expression import false
 
@@ -38,7 +39,7 @@ def read_memo(
 
 @router.post("", response_model=MemoInResponce, name="memos:create-own-memo")
 def create_memo_for_user(
-    memo: MemoInCreate,
+    memo: MemoInCreate = Body(..., embed=True, alias="memo"),
     db: Session = Depends(get_db),
     current_user: models.User = Depends(get_current_user),
 ) -> MemoInResponce:
@@ -52,7 +53,7 @@ def create_memo_for_user(
 @router.put("/{memo_id}", response_model=MemoInResponce, name="memos:update")
 def update_memo(
     memo_id: int,
-    memo_update: MemoInUpdate,
+    memo_update: MemoInUpdate = Body(..., embed=True, alias="memo"),
     db: Session = Depends(get_db),
     current_user: models.User = Depends(get_current_user)
 ) -> MemoInResponce:
