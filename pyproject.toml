@@ -13,14 +13,14 @@ python = "^3.9"
 fastapi = {extras = ["all"], version = "^0.65.1"}
 alembic = "^1.6.5"
 PyMySQL = "^1.0.2"
-SQLAlchemy = "^1.4.18"
+SQLAlchemy = "^1.4.19"
 python-jose = {extras = ["cryptography"], version = "^3.3.0"}
 passlib = {extras = ["bcrypt"], version = "^1.7.4"}
 
 [tool.poetry.dev-dependencies]
 autopep8 = "^1.5.7"
 flake8 = "^3.9.2"
-mypy = "^0.902"
+mypy = "^0.910"
 pytest = "^6.2.4"
 asgi-lifespan = "^1.0.1"
 httpx = "^0.18.2"
