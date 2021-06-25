@@ -20,7 +20,7 @@ passlib = {extras = ["bcrypt"], version = "^1.7.4"}
 [tool.poetry.dev-dependencies]
 autopep8 = "^1.5.7"
 flake8 = "^3.9.2"
-mypy = "^0.902"
+mypy = "^0.910"
 pytest = "^6.2.4"
 asgi-lifespan = "^1.0.1"
 httpx = "^0.18.2"
