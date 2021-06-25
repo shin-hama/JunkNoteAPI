@@ -5,7 +5,7 @@ from app.models.schemas.base import BaseSchema
 
 
 class MemoInCreate(BaseSchema):
-    containts: Optional[str] = None
+    containts: Optional[str] = ""
     reference: Optional[str] = None
 
 

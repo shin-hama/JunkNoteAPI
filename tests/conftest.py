@@ -14,8 +14,9 @@ from tests.util import (
     TEST_MYSQL_PASSWORD, TEST_MYSQL_PORT
 )
 
-from app.db.queries.users import create_user, delete_user
+from app.db.queries import memos, users
 from app.models import models
+from app.models.schemas.memos import MemoInCreate
 
 
 @pytest.fixture(scope="session")
@@ -97,7 +98,7 @@ def test_user(db_session: Session) -> Iterator[models.User]:
     """ Create a test user data on database, and delete it after running each
     test function.
     """
-    test_user = create_user(
+    test_user = users.create_user(
         db_session,
         username="test",
         email="test@example.com",
@@ -107,7 +108,7 @@ def test_user(db_session: Session) -> Iterator[models.User]:
     try:
         yield test_user
     finally:
-        delete_user(db_session, test_user)
+        users.delete_user(db_session, test_user)
 
 
 @pytest.fixture
@@ -132,3 +133,20 @@ def authorized_client(
         **client.headers,
     }
     return client
+
+
+@pytest.fixture
+def test_memo(
+    db_session: Session,
+    test_user: models.User,
+) -> Iterator[models.Memo]:
+    memo = MemoInCreate(containts="with_reference", reference="test")
+
+    created_memo = memos.create_memo_for_user(
+        db_session, memo=memo, user_id=test_user.id
+    )
+
+    try:
+        yield created_memo
+    finally:
+        memos.delete_memo_by_id(db_session, created_memo.id)
