@@ -1,5 +1,7 @@
 import sqlalchemy as sa
 from sqlalchemy.orm import relationship
+from sqlalchemy.orm.relationships import RelationshipProperty
+from sqlalchemy.sql import func
 
 from app.db.db import Base
 
@@ -12,9 +14,19 @@ class User(Base):
     email = sa.Column(sa.Text, index=True, nullable=False, unique=True)
     salt = sa.Column(sa.Text, nullable=False)
     hashed_password = sa.Column(sa.String(60), nullable=False)
-    created_at = sa.Column(sa.DateTime, index=True)
+    created = sa.Column(sa.DateTime, server_default=func.now())
+    updated = sa.Column(
+        sa.DateTime,
+        server_default=func.now(),
+        onupdate=func.now()
+    )
 
-    memos = relationship("Memo", back_populates="owner")
+    memos: RelationshipProperty = relationship(
+        "Memo",
+        back_populates="owner",
+        cascade="all, delete-orphan",
+        lazy="dynamic",
+    )
 
 
 class Memo(Base):
@@ -22,9 +34,16 @@ class Memo(Base):
 
     id = sa.Column(sa.Integer, primary_key=True, index=True)
     containts = sa.Column(sa.Text)
-    datetime = sa.Column(sa.DateTime, index=True)
+    created = sa.Column(sa.DateTime, server_default=func.now())
+    updated = sa.Column(
+        sa.DateTime,
+        server_default=func.now(),
+        onupdate=func.now()
+    )
     reference = sa.Column(sa.Text)
     owner_id = sa.Column(sa.Integer, sa.ForeignKey("users.id"))
     is_removed = sa.Column(sa.Boolean, default=False, index=True)
 
-    owner = relationship("User", back_populates="memos")
+    owner: RelationshipProperty = relationship(
+        "User", back_populates="memos"
+    )

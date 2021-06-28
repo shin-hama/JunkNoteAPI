@@ -5,9 +5,10 @@ from fastapi.testclient import TestClient
 import pytest
 from sqlalchemy.orm.session import Session
 
-from app.api.dependencies.authentication import get_user_by_username
-from app.db.queries.users import create_user, delete_user_by_email
-from app.models.schemas.users import UserInDB, UserInResponse
+from app.api.dependencies.authentication import authenticate_user
+from app.db.queries.users import create_user, delete_user
+from app.models import models
+from app.models.schemas.users import UserInResponse
 
 
 @pytest.fixture(params=(
@@ -24,7 +25,7 @@ def wrong_authorization_header(request: Any) -> str:
 def test_user_can_not_access_own_profile_if_not_logged_in(
     app: FastAPI,
     client: TestClient,
-    test_user: UserInDB,
+    test_user: models.User,
     api_method: str,
     route_name: str,
 ) -> None:
@@ -39,7 +40,7 @@ def test_user_can_not_access_own_profile_if_not_logged_in(
 def test_user_can_not_retrieve_own_profile_if_wrong_token(
     app: FastAPI,
     client: TestClient,
-    test_user: UserInDB,
+    test_user: models.User,
     api_method: str,
     route_name: str,
     wrong_authorization_header: str,
@@ -55,7 +56,7 @@ def test_user_can_not_retrieve_own_profile_if_wrong_token(
 def test_user_can_retrieve_own_profile(
     app: FastAPI,
     authorized_client: TestClient,
-    test_user: UserInDB,
+    test_user: models.User,
     token: str,
     db_session: Session,
 ) -> None:
@@ -89,10 +90,6 @@ def test_user_can_update_own_profile(
     user_profile = UserInResponse(**res.json()).dict()
     assert user_profile[update_field] == update_value
 
-    # Delete updated data not to effect another test because unable to delete
-    # when change email
-    delete_user_by_email(db_session, email=user_profile["email"])
-
 
 def test_user_can_change_password(
     app: FastAPI,
@@ -109,11 +106,8 @@ def test_user_can_change_password(
     from app.db.db import SessionLocal
 
     db = SessionLocal()
-    user = get_user_by_username(
-        db, username=user_profile.username
-    )
+    user = authenticate_user(db, user_profile.username, "new_password")
     assert user is not None
-    assert user.verify_password("new_password")
     db.close()
 
 
@@ -122,7 +116,7 @@ def test_user_can_not_take_already_used_credentials(
     authorized_client: TestClient,
     db_session: Session,
 ) -> None:
-    """ Cannot Email is unique
+    """ Cannot Email is unique. You have to create new user to test updating.
     """
     unique_key = "email"
     user_dict = {
@@ -130,7 +124,7 @@ def test_user_can_not_take_already_used_credentials(
         "password": "password",
         unique_key: "new_user@email.com",
     }
-    create_user(db_session, **user_dict)
+    tmp_user = create_user(db_session, **user_dict)
 
     res = authorized_client.put(
         app.url_path_for("users:update-current-user"),
@@ -140,4 +134,4 @@ def test_user_can_not_take_already_used_credentials(
 
     # Delete updated data not to effect another test because unable to delete
     # when change email
-    delete_user_by_email(db_session, email=user_dict["email"])
+    delete_user(db_session, tmp_user)

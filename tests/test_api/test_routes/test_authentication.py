@@ -2,11 +2,11 @@ from fastapi import FastAPI, status
 from fastapi.testclient import TestClient
 import pytest
 
-from app.models.schemas.users import UserInDB
+from app.models import models
 
 
 def test_unable_to_register_same_email_user(
-    app: FastAPI, client: TestClient, test_user: UserInDB
+    app: FastAPI, client: TestClient, test_user: models.User
 ) -> None:
     res = client.post(
         app.url_path_for("auth:register"),
@@ -38,7 +38,7 @@ def test_unable_to_login_no_registered_user(
 def test_unable_to_login_with_wrong_input_oneside(
     app: FastAPI,
     client: TestClient,
-    test_user: UserInDB,
+    test_user: models.User,
     username: str,
     password: str
 ) -> None:

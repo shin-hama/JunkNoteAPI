@@ -1,18 +1,15 @@
-from datetime import datetime
 from typing import Optional
 
 from sqlalchemy.orm import Session
 
 from app.models.schemas.users import UserInDB
-from app.models.schemas.memos import MemoCreate
 from app.models import models
 
 
 def create_user(
     db: Session, username: str, email: str, password: str
-) -> UserInDB:
-    now = datetime.now()
-    user = UserInDB(username=username, email=email, created_at=now)
+) -> models.User:
+    user = UserInDB(username=username, email=email)
     user.change_password(password)
 
     db_user = models.User(**user.dict())
@@ -20,7 +17,7 @@ def create_user(
     db.commit()
     db.refresh(db_user)
 
-    return user
+    return db_user
 
 
 def update_user(
@@ -44,24 +41,12 @@ def update_user(
     return user
 
 
-def delete_user_by_email(
+def delete_user(
     db: Session,
-    email: str
+    user: models.User
 ) -> None:
-    db.query(models.User).filter(
-        models.User.email == email
-    ).delete()
+    db.delete(user)
     db.commit()
-
-
-def create_memo_for_user(
-    db: Session, memo: MemoCreate, user_id: int
-) -> models.Memo:
-    db_memo = models.Memo(**memo.dict(), owner_id=user_id)
-    db.add(db_memo)
-    db.commit()
-    db.refresh(db_memo)
-    return db_memo
 
 
 def get_user_by_username(db: Session, username: str) -> Optional[models.User]:

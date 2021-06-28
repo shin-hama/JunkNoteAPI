@@ -1,23 +1,29 @@
 from datetime import datetime
 from typing import Optional
 
-from pydantic import BaseModel
+from app.models.schemas.base import BaseSchema
 
 
-class MemoBase(BaseModel):
-    containts: str
-    datetime: datetime
+class MemoInCreate(BaseSchema):
+    containts: Optional[str] = ""
     reference: Optional[str] = None
 
 
-class MemoCreate(MemoBase):
-    pass
+class MemoInUpdate(MemoInCreate):
+    is_removed: bool = False
 
 
-class Memo(MemoBase):
+class MemoBase(BaseSchema):
+    containts: str
+    reference: Optional[str] = None
+    created: Optional[datetime] = None
+
+
+class MemoInDB(MemoBase):
     id: int
     owner_id: int
-    is_removed: bool
+    is_removed: bool = False
 
-    class Config:
-        orm_mode = True
+
+class MemoInResponce(MemoBase):
+    id: int
