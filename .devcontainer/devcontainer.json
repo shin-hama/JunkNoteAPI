@@ -27,6 +27,7 @@
 		"ms-python.vscode-pylance",
 		"ms-python.python",
 		"visualstudioexptteam.vscodeintellicode",
+		"eamodio.gitlens",
 	]
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
 	// "forwardPorts": [],

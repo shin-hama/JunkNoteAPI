@@ -37,7 +37,7 @@ def db_container() -> Iterator[None]:
             "MYSQL_USER": TEST_MYSQL_USER,
             "MYSQL_PASSWORD": TEST_MYSQL_PASSWORD,
         },
-        ports={TEST_MYSQL_PORT: TEST_MYSQL_PORT}
+        ports={TEST_MYSQL_PORT: TEST_MYSQL_PORT},
     )
 
     try:

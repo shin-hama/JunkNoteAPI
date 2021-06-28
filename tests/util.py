@@ -6,7 +6,8 @@ TEST_MYSQL_DATABASE = "test_db"
 TEST_MYSQL_USER = "mysql"
 TEST_MYSQL_PASSWORD = "mysql"
 TEST_MYSQL_PORT = "3306"
-TEST_MYSQL_HOST = "localhost"
+# Connect to container is outside of this container
+TEST_MYSQL_HOST = "host.docker.internal"
 
 TEST_DB_URL = (
     f"mysql+pymysql://{TEST_MYSQL_USER}:{TEST_MYSQL_PASSWORD}"
