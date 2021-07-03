@@ -11,7 +11,7 @@ from app.services.authentication import check_email_is_taken
 router = APIRouter()
 
 
-@router.post("/login", response_model=UserInResponse, name="auth:login")
+@router.post("/token", response_model=UserInResponse, name="auth:login")
 async def login(
     form_data: OAuth2PasswordRequestForm = Depends(),
     db: Session = Depends(get_db)

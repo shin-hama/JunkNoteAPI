@@ -14,11 +14,11 @@ from app.services.security import oauth2_scheme
 
 
 def authenticate_user(
-    db: Session, username: str, password: str
+    db: Session, email: str, password: str
 ) -> Optional[UserInDB]:
     """ Get user data that is matched username and password
     """
-    db_user = users.get_user_by_username(db, username)
+    db_user = users.get_user_by_email(db, email)
     if not db_user:
         return None
     user = UserInDB(**db_user.__dict__)
