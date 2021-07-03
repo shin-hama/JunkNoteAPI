@@ -25,7 +25,7 @@ def test_unable_to_login_no_registered_user(
 ) -> None:
     res = client.post(
         app.url_path_for("auth:login"),
-        data={"username": "wrong_user", "password": "Null"},
+        data={"username": "wrong_user@email.com", "password": "Null"},
     )
 
     assert res.status_code == status.HTTP_401_UNAUTHORIZED
@@ -33,7 +33,7 @@ def test_unable_to_login_no_registered_user(
 
 @pytest.mark.parametrize(
     "username, password",
-    (("test", "wrong_password"), ("wrong_user", "password")),
+    (("test@email.com", "wrong_password"), ("wrong_user", "password")),
 )
 def test_unable_to_login_with_wrong_input_oneside(
     app: FastAPI,
