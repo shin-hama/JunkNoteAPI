@@ -123,7 +123,7 @@ def authorization_prefix() -> str:
 @pytest.fixture
 def token(test_user: models.User) -> str:
     from app.api.dependencies.authentication import create_access_token
-    return create_access_token({"sub": test_user.username})
+    return create_access_token({"sub": test_user.email})
 
 
 @pytest.fixture

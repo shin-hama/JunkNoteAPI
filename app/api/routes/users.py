@@ -23,7 +23,7 @@ async def read_users_me(
     user: models.User = Depends(auth.get_current_user)
 ) -> UserInResponse:
     # Set response model to hide hashed_password
-    token = auth.create_access_token(data={"sub": user.username})
+    token = auth.create_access_token(data={"sub": user.email})
 
     return UserInResponse(
         **user.__dict__,
@@ -53,7 +53,7 @@ async def update_current_user(
         db, UserInDB(**current_user.__dict__), **user_update.dict()
     )
 
-    token = auth.create_access_token(data={"sub": updated_user.username})
+    token = auth.create_access_token(data={"sub": updated_user.email})
     return UserInResponse(
         **updated_user.dict(),
         access_token=token,

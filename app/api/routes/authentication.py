@@ -22,10 +22,10 @@ async def login(
     if not user:
         raise HTTPException(
             status_code=401,
-            detail="Incorrect username or password",
+            detail="Incorrect email or password",
             headers={"WWW-Authenticate": "Bearer"},
         )
-    access_token = auth.create_access_token(data={"sub": user.username})
+    access_token = auth.create_access_token(data={"sub": user.email})
 
     return UserInResponse(
         **user.dict(),
@@ -51,7 +51,7 @@ async def register(
         )
     user_db = create_user(db, **user_create.dict())
 
-    access_token = auth.create_access_token(data={"sub": user_create.username})
+    access_token = auth.create_access_token(data={"sub": user_create.email})
     return UserInResponse(
         **user_db.__dict__,
         access_token=access_token,

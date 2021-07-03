@@ -7,7 +7,7 @@ from app.core.config import API_PREFIX
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl=f"{API_PREFIX}/users/login")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl=f"{API_PREFIX}/users/token")
 
 
 def generate_salt() -> str:
