@@ -38,6 +38,8 @@ def db_container() -> Iterator[None]:
             "MYSQL_PASSWORD": TEST_MYSQL_PASSWORD,
         },
         ports={TEST_MYSQL_PORT: TEST_MYSQL_PORT},
+        # Need to define port with command to connect other than default port
+        command=f"--port {TEST_MYSQL_PORT}",
     )
 
     try:
@@ -48,7 +50,7 @@ def db_container() -> Iterator[None]:
             else:
                 time.sleep(0.1)
         else:
-            raise ConnectionError("Fail to connect Database")
+            raise ConnectionError(f"Fail to connect Database: {TEST_DB_URL}")
 
         # migrate to test database
         alembicArgs = [
@@ -101,7 +103,7 @@ def test_user(db_session: Session) -> Iterator[models.User]:
     test_user = users.create_user(
         db_session,
         username="test",
-        email="test@example.com",
+        email="test@email.com",
         password="password"
     )
 
@@ -121,7 +123,7 @@ def authorization_prefix() -> str:
 @pytest.fixture
 def token(test_user: models.User) -> str:
     from app.api.dependencies.authentication import create_access_token
-    return create_access_token({"sub": test_user.username})
+    return create_access_token({"sub": test_user.email})
 
 
 @pytest.fixture

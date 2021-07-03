@@ -106,7 +106,7 @@ def test_user_can_change_password(
     from app.db.db import SessionLocal
 
     db = SessionLocal()
-    user = authenticate_user(db, user_profile.username, "new_password")
+    user = authenticate_user(db, user_profile.email, "new_password")
     assert user is not None
     db.close()
 
