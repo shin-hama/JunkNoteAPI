@@ -1,5 +1,4 @@
 from sqlalchemy.orm import Session
-from sqlalchemy.sql.expression import false
 
 from app.models import models
 from app.services.authentication import check_email_is_taken
