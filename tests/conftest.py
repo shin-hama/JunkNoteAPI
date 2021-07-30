@@ -85,7 +85,7 @@ def client(app: FastAPI) -> TestClient:
 
 
 @pytest.fixture
-def db_session() -> Iterator[Session]:
+def db_session(db_container: None) -> Iterator[Session]:
     from app.db.db import SessionLocal
 
     db = SessionLocal()
