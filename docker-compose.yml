@@ -1,12 +1,12 @@
-version: "3"
+version: '3'
 
 services:
   db:
     image: mysql:8.0
     restart: always
-    container_name: "mysql"
+    container_name: 'mysql'
     expose:
-      - "3306"
+      - '3306'
     env_file:
       - .env
     volumes:
@@ -19,9 +19,9 @@ services:
       context: .
       dockerfile: Dockerfile
     restart: on-failure
-    container_name: "fastapi"
+    container_name: 'fastapi'
     ports:
-      - "8000:8000"
+      - '9012:9012'
     env_file:
       - .env
     depends_on:
