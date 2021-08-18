@@ -1,25 +1,26 @@
 FROM python:3.9-slim as builder
 
-WORKDIR /usr/src/app
-
-RUN pip install poetry
+ARG WORKDIR
+WORKDIR ${WORKDIR}
 
 COPY pyproject.toml poetry.lock ./
 
-RUN poetry export -f requirements.txt > requirements.txt
+RUN pip install poetry && \
+    poetry export -f requirements.txt > requirements.txt
 
-
-FROM python:3.9-slim as dev
+FROM python:3.9-slim as server
 
 ENV PYTHONUNBUFFERED=1
 
-WORKDIR /usr/src/app
+ARG WORKDIR
+WORKDIR ${WORKDIR}
 
-COPY --from=builder /usr/src/app/requirements.txt .
+COPY --from=builder ${WORKDIR}/requirements.txt .
 
 RUN pip install -r requirements.txt
 
-COPY . .
+COPY .env alembic.ini ./
+COPY app/ ./app/
 
 CMD alembic upgrade head && \
-    uvicorn --host=0.0.0.0 app.main:app --reload
+    uvicorn --host 0.0.0.0 --port ${APP_PORT} app.main:app --reload

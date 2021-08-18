@@ -6,7 +6,7 @@ services:
     restart: always
     container_name: 'mysql'
     expose:
-      - '3306'
+      - '$MYSQL_PORT'
     env_file:
       - .env
     volumes:
@@ -18,10 +18,12 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+      args:
+        - WORKDIR=/usr/src/app
     restart: on-failure
     container_name: 'fastapi'
     ports:
-      - '9012:9012'
+      - '$APP_PORT:$APP_PORT'
     env_file:
       - .env
     depends_on:
