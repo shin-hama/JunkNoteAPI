@@ -9,7 +9,7 @@ RUN apt-get update && \
 
 COPY . .
 
-RUN curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python - && \
-    . $HOME/.poetry/env && \
+RUN curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/install-poetry.py | python - && \
+    export PATH="$HOME/.local/bin:$PATH" && \
     poetry config virtualenvs.create false --local && \
     poetry install
