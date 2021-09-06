@@ -33,7 +33,7 @@ class Memo(Base):
     __tablename__ = "memos"
 
     id = sa.Column(sa.Integer, primary_key=True, index=True)
-    containts = sa.Column(sa.Text)
+    contents = sa.Column(sa.Text, default="", nullable=False)
     created = sa.Column(sa.DateTime, server_default=func.now())
     updated = sa.Column(
         sa.DateTime,
