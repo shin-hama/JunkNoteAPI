@@ -5,7 +5,7 @@ from app.models.schemas.base import BaseSchema
 
 
 class MemoInCreate(BaseSchema):
-    containts: Optional[str] = ""
+    contents: Optional[str] = ""
     reference: Optional[str] = None
 
 
@@ -14,9 +14,10 @@ class MemoInUpdate(MemoInCreate):
 
 
 class MemoBase(BaseSchema):
-    containts: str
+    contents: str
     reference: Optional[str] = None
     created: Optional[datetime] = None
+    updated: Optional[datetime] = None
 
 
 class MemoInDB(MemoBase):

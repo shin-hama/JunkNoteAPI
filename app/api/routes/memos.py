@@ -65,9 +65,7 @@ def update_memo(
             detail="Invalid owner",
         )
 
-    updated_memo = memos.update_memo(db, memo_id, memo_update)
-
-    return MemoInResponce(id=memo_id, **updated_memo.dict())
+    return memos.update_memo(db, memo_id, memo_update)
 
 
 @router.delete("/{memo_id}", name="memos:delete")
