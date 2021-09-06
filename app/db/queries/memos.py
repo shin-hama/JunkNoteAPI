@@ -26,13 +26,17 @@ def create_memo_for_user(
 
 def update_memo(
     db: Session, memo_id: int, memo_update: MemoInUpdate,
-) -> MemoInUpdate:
-    db.query(models.Memo).filter(
+) -> models.Memo:
+    db_memo = db.query(models.Memo).filter(
         models.Memo.id == memo_id
-    ).update(memo_update.dict())
+    ).one()
+    db_memo.contents = memo_update.contents
+    db_memo.reference = memo_update.reference
+    db_memo.is_removed = memo_update.is_removed
     db.commit()
+    print(db_memo)
 
-    return memo_update
+    return db_memo
 
 
 def delete_memo_by_id(db: Session, memo_id: int) -> bool:
