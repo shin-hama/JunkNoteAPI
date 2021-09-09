@@ -3,7 +3,6 @@ from typing import List
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.param_functions import Body
 from sqlalchemy.orm import Session
-from sqlalchemy.sql.expression import false
 
 from app.api.dependencies.authentication import get_current_user
 from app.api.dependencies.database import get_db
@@ -21,17 +20,17 @@ router = APIRouter()
     response_model=List[MemoInResponce],
     name="memos:get-own-memos",
 )
-def read_memos_for_current_user(
-    skip: int = 0, limit: int = 100,
+def get_memos_for_current_user(
+    skip: int = 0, limit: int = 100, removed: bool = False,
     current_user: models.User = Depends(get_current_user),
 ) -> list[MemoInResponce]:
     return current_user.memos.filter(
-        models.Memo.is_removed == false()
+        models.Memo.is_removed.is_(removed)
     )[skip:limit]
 
 
 @router.get("/{memo_id}", response_model=MemoInResponce)
-def read_memo(
+def get_memo(
     memo_id: int, db: Session = Depends(get_db)
 ) -> MemoInResponce:
     return get_memo_by_id(db=db, id=memo_id)
