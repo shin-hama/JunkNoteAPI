@@ -3,7 +3,6 @@ from typing import List
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.param_functions import Body
 from sqlalchemy.orm import Session
-from sqlalchemy.sql.expression import false
 
 from app.api.dependencies.authentication import get_current_user
 from app.api.dependencies.database import get_db
@@ -21,19 +20,17 @@ router = APIRouter()
     response_model=List[MemoInResponce],
     name="memos:get-own-memos",
 )
-def read_memos_for_current_user(
-    skip: int = 0, limit: int = 100,
+def get_memos_for_current_user(
+    skip: int = 0, limit: int = 100, removed: bool = False,
     current_user: models.User = Depends(get_current_user),
-) -> list[MemoInResponce]:
-    return current_user.memos.filter(
-        models.Memo.is_removed == false()
-    )[skip:limit]
+) -> list[models.Memo]:
+    return memos.get_memos_for_user(current_user, skip, limit, removed)
 
 
 @router.get("/{memo_id}", response_model=MemoInResponce)
-def read_memo(
+def get_memo(
     memo_id: int, db: Session = Depends(get_db)
-) -> MemoInResponce:
+) -> models.Memo:
     return get_memo_by_id(db=db, id=memo_id)
 
 
@@ -42,7 +39,7 @@ def create_memo_for_user(
     memo: MemoInCreate = Body(..., embed=True, alias="memo"),
     db: Session = Depends(get_db),
     current_user: models.User = Depends(get_current_user),
-) -> MemoInResponce:
+) -> models.Memo:
     return memos.create_memo_for_user(
         db=db,
         memo=memo,
@@ -56,7 +53,7 @@ def update_memo(
     memo_update: MemoInUpdate = Body(..., embed=True, alias="memo"),
     db: Session = Depends(get_db),
     current_user: models.User = Depends(get_current_user)
-) -> MemoInResponce:
+) -> models.Memo:
     """ Update memo that the current user has. logical delete is done too.
     """
     if check_owner_is_collect(memo_id, db, current_user) is False:

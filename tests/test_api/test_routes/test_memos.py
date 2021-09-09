@@ -131,7 +131,7 @@ def test_unable_update_memo_is_not_existed(
     (
         {"containts": "with_reference"},
         {"reference": "test"},
-        {"is_removed": "true"}
+        {"removed": "true"}
     )
 )
 def test_update_memo(

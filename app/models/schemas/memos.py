@@ -10,7 +10,7 @@ class MemoInCreate(BaseSchema):
 
 
 class MemoInUpdate(MemoInCreate):
-    is_removed: bool = False
+    removed: bool = False
 
 
 class MemoBase(BaseSchema):
@@ -23,7 +23,7 @@ class MemoBase(BaseSchema):
 class MemoInDB(MemoBase):
     id: int
     owner_id: int
-    is_removed: bool = False
+    removed: bool = False
 
 
 class MemoInResponce(MemoBase):
