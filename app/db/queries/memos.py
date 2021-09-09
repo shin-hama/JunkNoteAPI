@@ -14,6 +14,17 @@ def get_memos(
     return db.query(models.Memo).offset(skip).limit(limit).all()
 
 
+def get_memos_for_user(
+    user: models.User,
+    skip: int = 0,
+    limit: int = 100,
+    is_removed: bool = False
+) -> list[models.Memo]:
+    return user.memos.filter(
+        models.Memo.is_removed.is_(is_removed)
+    )[skip:limit]
+
+
 def create_memo_for_user(
     db: Session, memo: MemoInCreate, user_id: int
 ) -> models.Memo:

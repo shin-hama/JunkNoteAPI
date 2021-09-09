@@ -23,16 +23,14 @@ router = APIRouter()
 def get_memos_for_current_user(
     skip: int = 0, limit: int = 100, removed: bool = False,
     current_user: models.User = Depends(get_current_user),
-) -> list[MemoInResponce]:
-    return current_user.memos.filter(
-        models.Memo.is_removed.is_(removed)
-    )[skip:limit]
+) -> list[models.Memo]:
+    return memos.get_memos_for_user(current_user, skip, limit, removed)
 
 
 @router.get("/{memo_id}", response_model=MemoInResponce)
 def get_memo(
     memo_id: int, db: Session = Depends(get_db)
-) -> MemoInResponce:
+) -> models.Memo:
     return get_memo_by_id(db=db, id=memo_id)
 
 
@@ -41,7 +39,7 @@ def create_memo_for_user(
     memo: MemoInCreate = Body(..., embed=True, alias="memo"),
     db: Session = Depends(get_db),
     current_user: models.User = Depends(get_current_user),
-) -> MemoInResponce:
+) -> models.Memo:
     return memos.create_memo_for_user(
         db=db,
         memo=memo,
@@ -55,7 +53,7 @@ def update_memo(
     memo_update: MemoInUpdate = Body(..., embed=True, alias="memo"),
     db: Session = Depends(get_db),
     current_user: models.User = Depends(get_current_user)
-) -> MemoInResponce:
+) -> models.Memo:
     """ Update memo that the current user has. logical delete is done too.
     """
     if check_owner_is_collect(memo_id, db, current_user) is False:
