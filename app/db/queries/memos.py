@@ -21,7 +21,7 @@ def get_memos_for_user(
     is_removed: bool = False
 ) -> list[models.Memo]:
     return user.memos.filter(
-        models.Memo.is_removed.is_(is_removed)
+        models.Memo.removed.is_(is_removed)
     )[skip:limit]
 
 
@@ -43,7 +43,7 @@ def update_memo(
     ).one()
     db_memo.contents = memo_update.contents
     db_memo.reference = memo_update.reference
-    db_memo.is_removed = memo_update.is_removed
+    db_memo.removed = memo_update.removed
     db.commit()
     print(db_memo)
 

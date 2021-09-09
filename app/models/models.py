@@ -42,7 +42,7 @@ class Memo(Base):
     )
     reference = sa.Column(sa.Text)
     owner_id = sa.Column(sa.Integer, sa.ForeignKey("users.id"))
-    is_removed = sa.Column(sa.Boolean, default=False, index=True)
+    removed = sa.Column(sa.Boolean, default=False, index=True, nullable=False)
 
     owner: RelationshipProperty = relationship(
         "User", back_populates="memos"
