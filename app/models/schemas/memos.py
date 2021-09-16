@@ -11,6 +11,7 @@ class MemoInCreate(BaseSchema):
 
 class MemoInUpdate(MemoInCreate):
     removed: bool = False
+    pinned: bool = False
 
 
 class MemoBase(BaseSchema):
@@ -18,6 +19,7 @@ class MemoBase(BaseSchema):
     reference: Optional[str] = None
     created: Optional[datetime] = None
     updated: Optional[datetime] = None
+    pinned: bool = False
 
 
 class MemoInDB(MemoBase):
