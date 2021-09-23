@@ -44,6 +44,7 @@ def update_memo(
     db_memo.contents = memo_update.contents
     db_memo.reference = memo_update.reference
     db_memo.removed = memo_update.removed
+    db_memo.pinned = memo_update.pinned
     db.commit()
     print(db_memo)
 
