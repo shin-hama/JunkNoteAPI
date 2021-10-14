@@ -1,6 +1,6 @@
 [[package]]
 name = "alembic"
-version = "1.7.3"
+version = "1.7.4"
 description = "A database migration tool for SQLAlchemy."
 category = "main"
 optional = false
@@ -736,12 +736,12 @@ python-versions = ">=3.6"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "5ab7bc5bec805e00a7d98d83aa3d0d2842ae1d229fe2b40bac27a8d050de58b8"
+content-hash = "a4fa5452a77cd65a7e4a1f87323672e4bb8ee9915bd7352bb67ea8d13b9fe420"
 
 [metadata.files]
 alembic = [
-    {file = "alembic-1.7.3-py3-none-any.whl", hash = "sha256:d0c580041f9f6487d5444df672a83da9be57398f39d6c1802bbedec6fefbeef6"},
-    {file = "alembic-1.7.3.tar.gz", hash = "sha256:bc5bdf03d1b9814ee4d72adc0b19df2123f6c50a60c1ea761733f3640feedb8d"},
+    {file = "alembic-1.7.4-py3-none-any.whl", hash = "sha256:e3cab9e59778b3b6726bb2da9ced451c6622d558199fd3ef914f3b1e8f4ef704"},
+    {file = "alembic-1.7.4.tar.gz", hash = "sha256:9d33f3ff1488c4bfab1e1a6dfebbf085e8a8e1a3e047a43ad29ad1f67f012a1d"},
 ]
 anyio = [
     {file = "anyio-3.2.0-py3-none-any.whl", hash = "sha256:89e19b1498c8a6f12277e0bd2949597e445aa1b14361fbab2c36943639ef5190"},
