@@ -18,10 +18,12 @@ def get_memos_for_user(
     user: models.User,
     skip: int = 0,
     limit: int = 100,
-    is_removed: bool = False
+    is_removed: bool = False,
+    search_text: str = ""
 ) -> list[models.Memo]:
     return user.memos.filter(
-        models.Memo.removed.is_(is_removed)
+        models.Memo.removed.is_(is_removed),
+        models.Memo.contents.contains(search_text)
     )[skip:limit]
 
 
