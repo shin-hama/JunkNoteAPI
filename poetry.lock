@@ -682,7 +682,7 @@ python-versions = ">=2.6, !=3.0.*, !=3.1.*, !=3.2.*"
 
 [[package]]
 name = "types-pymysql"
-version = "1.0.2"
+version = "1.0.3"
 description = "Typing stubs for PyMySQL"
 category = "dev"
 optional = false
@@ -736,7 +736,7 @@ python-versions = ">=3.6"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "5ab7bc5bec805e00a7d98d83aa3d0d2842ae1d229fe2b40bac27a8d050de58b8"
+content-hash = "f0992f33d42c916ff9ab0476c4b4afeb6bbed26b9bd11fe83eb4ca91a793ff32"
 
 [metadata.files]
 alembic = [
@@ -1212,8 +1212,8 @@ toml = [
     {file = "toml-0.10.2.tar.gz", hash = "sha256:b3bda1d108d5dd99f4a20d24d9c348e91c4db7ab1b749200bded2f839ccbe68f"},
 ]
 types-pymysql = [
-    {file = "types-PyMySQL-1.0.2.tar.gz", hash = "sha256:8a814d8391934009a0e1a3a344c9295e6a7fda76a6df0c469b0a13f0ae6e79df"},
-    {file = "types_PyMySQL-1.0.2-py3-none-any.whl", hash = "sha256:19ebd2d3e1c16fb4ae76c74cedbed7e76a0861e7457865477f40732ca84c393d"},
+    {file = "types-PyMySQL-1.0.3.tar.gz", hash = "sha256:ec2f086f40d24c18b47785ba2fec739484917fc507445fb801c2ad57c6a1c38c"},
+    {file = "types_PyMySQL-1.0.3-py3-none-any.whl", hash = "sha256:644bc2eb7cf2825d25e8a4c9cdf48408e4c64fa148deb5f418664cd7618a8bd1"},
 ]
 typing-extensions = [
     {file = "typing_extensions-3.10.0.0-py2-none-any.whl", hash = "sha256:0ac0f89795dd19de6b97debb0c6af1c70987fd80a2d62d1958f7e56fcc31b497"},
