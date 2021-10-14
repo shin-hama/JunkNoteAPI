@@ -21,10 +21,10 @@ router = APIRouter()
     name="memos:get-own-memos",
 )
 def get_memos_for_current_user(
-    skip: int = 0, limit: int = 100, removed: bool = False,
+    skip: int = 0, limit: int = 100, removed: bool = False, q: str = "",
     current_user: models.User = Depends(get_current_user),
 ) -> list[models.Memo]:
-    return memos.get_memos_for_user(current_user, skip, limit, removed)
+    return memos.get_memos_for_user(current_user, skip, limit, removed, q)
 
 
 @router.get("/{memo_id}", response_model=MemoInResponce)
